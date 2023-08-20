@@ -18,20 +18,20 @@ module.exports = class RTCClient{
 
   /**
    * 経路情報を取得しオファーを作成
-   * @returns {RTCOfferDate} オファーデータ
+   * @returns {RTCSessionDescriptionInit} オファーデータ
    */
   async createOffer(){
     const offer = await this.rtc.createOffer();
     await this.rtc.setLocalDescription(offer);
 
     await this.getCandidates();
-    return offer;
+    return this.rtc.localDescription;;
   }
 
   /**
-   * 
-   * @param {RTCOfferDate} offer 相手のオファーデータ
-   * @returns {RTCAnswerDate} アンサーデータ
+   * 経路情報を取得しアンサーを作成
+   * @param {RTCSessionDescriptionInit} offer 相手のオファーデータ
+   * @returns {RTCSessionDescriptionInit} アンサーデータ
    */
   async createAnswer(offer){
     await this.rtc.setRemoteDescription(offer);
@@ -40,7 +40,7 @@ module.exports = class RTCClient{
 
     const answer = await this.rtc.createAnswer();
     await this.rtc.setLocalDescription(answer);
-    return answer;
+    return this.rtc.localDescription;
   }
 
   /**
@@ -50,8 +50,7 @@ module.exports = class RTCClient{
   async getCandidates(){
     return await new Promise(resolve=>{
       this.rtc.addEventListener("icecandidate",async(event)=>{
-        if(event.candidate !== null) return;
-          resolve();
+        if(event.candidate === null) resolve();
       });
     })
   }

@@ -1,5 +1,3 @@
-const DataChecker = require("../lib/DataChecker");
-const parse = require("../lib/parse");
 /**
  * WebSocketクライアント
  */
@@ -17,14 +15,6 @@ module.exports = class WSClient{
     this.ws.addEventListener("error",(error)=>{
       console.log(`WebSocket Error: ${error}`); 
     });
-
-    this.ws.addEventListener("message",(_data)=>{
-      const data = parse(_data.toString());
-      if(!data) return;
-      console.log(`WebSocket Data: ${data}`);
-      if(!DataChecker(data)) return;
-      
-    });
   }
 
   /**
@@ -32,6 +22,6 @@ module.exports = class WSClient{
    * @param {Object} data 通信データオブジェクト
    */
   send(data){
-    this.ws.send(data);
+    this.ws.send(JSON.stringify(data));
   }
 }

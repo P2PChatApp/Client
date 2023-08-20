@@ -1,4 +1,8 @@
 const WSClient = require("./WSClient");
+const WSEventHandler = require("./WSEventHandler");
+
+const DataChecker = require("../lib/DataChecker");
+const parse = require("../lib/parse");
 /**
  * システム管理
  */
@@ -8,9 +12,18 @@ module.exports = class SystemManager{
    */
   constructor(){
     this.clientId = this.createId();
-    this.status = "IDLING";
 
-    this.ws = new WSClient();
+    this.WSClient = new WSClient();
+    this.WSEventHandler = new WSEventHandler(WSClient.ws,this.clientId);
+
+    this.WSClient.ws.addEventListener("message",async(_data)=>{
+      const data = parse(_data.toString());
+      if(!data) return;
+      console.log(`WebSocket Data: ${data}`);
+      if(!DataChecker(data)) return;
+
+      await WSEventHandler.handle(data);
+    });
   }
 
   /**
