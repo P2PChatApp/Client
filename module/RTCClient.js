@@ -1,5 +1,3 @@
-const { RTCPeerConnection } = require("wrtc")
-
 /**
  * WebRTC Client
  */
@@ -49,7 +47,7 @@ module.exports = class RTCClient{
    */
   async getCandidates(){
     return await new Promise(resolve=>{
-      this.rtc.on("icecandidate",async(event)=>{
+      this.rtc.addEventListener("icecandidate",async(event)=>{
         if(event.candidate !== null) return;
           resolve();
       });
