@@ -1,9 +1,22 @@
+let client = {};
 let status = "IDLING";
 let group = {};
 let connection = {};
 let clients = {};
 
 module.exports = {
+  /**
+   * クライアントの情報を更新します
+   * @param {Object} data 更新するクライアントオブジェクト
+   * @returns 更新後のクライアントデータ
+   */
+  setClient(data){
+    client = {
+      "id": data.id||client.id,
+      "name": data.name||client.name
+    };
+    return client;
+  },
   /**
    * 現在のステータスを取得します
    * @returns {String} ステータス

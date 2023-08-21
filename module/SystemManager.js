@@ -25,12 +25,14 @@ module.exports = class SystemManager{
       await this.WSEventHandler.handle(data);
     });
 
-    this.WSClient.send({
-      "type": "DATA_REQUEST",
-      "clientId": this.clientId,
-      "status": DataManager.getStatus(),
-      "group": DataManager.getGroup()
-    });
+    setInterval(()=>{
+      this.WSClient.send({
+        "type": "DATA_REQUEST",
+        "clientId": this.clientId,
+        "status": DataManager.getStatus(),
+        "group": DataManager.getGroup()
+      });
+    },3000)
   }
 
   /**
@@ -43,6 +45,28 @@ module.exports = class SystemManager{
       id += (Math.floor(Math.random()*9)+1).toString(); 
     }
     return id;
+  }
+
+  /**
+   * データを更新します
+   */
+  update(){
+    this.WSClient.send({
+      "type": "DATA_REQUEST",
+      "clientId": this.clientId,
+      "status": DataManager.getStatus(),
+      "group": DataManager.getGroup()
+    });
+  }
+
+  /**
+   * グループ一覧の取得
+   * @returns {Array} 存在するグループの配列
+   */
+  getGroups(){
+    return DataManager.getClients()
+      .map(client=>client.group)
+      .filter(group=>Object.keys(group).length !== 0);
   }
 
   /**

@@ -45,10 +45,9 @@ module.exports = class RTCClient{
 
   /**
    * 経路が全て見つかるまで待機する
-   * @returns {Void}
    */
   async getCandidates(){
-    return await new Promise(resolve=>{
+    await new Promise(resolve=>{
       this.rtc.addEventListener("icecandidate",async(event)=>{
         if(event.candidate === null) resolve();
       });
