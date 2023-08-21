@@ -12,6 +12,7 @@ module.exports = class SystemManager{
    */
   constructor(){
     this.clientId = this.createId();
+    this.group = {};
 
     this.WSClient = new WSClient();
     this.WSEventHandler = new WSEventHandler(WSClient.ws,this.clientId);
@@ -38,5 +39,30 @@ module.exports = class SystemManager{
     return id;
   }
 
+  /**
+   * 
+   * @param {String} name グループ名 
+   * @param {Boolean} isPublic チャットを公開するかどうか 
+   * @returns {Object} グループデータ
+   */
+  createGroup(name,isPublic){
+    this.group = {
+      "name": name,
+      "id": this.createId(),
+      "isPublic": isPublic,
+      "status": "WAITING"
+    };
+    return this.group;
+  }
 
+  /**
+   * 現在のグループを削除
+   */
+  deleteGroup(){
+    this.group = {};
+  }
+
+  startRTC(){
+
+  }
 }

@@ -54,4 +54,27 @@ module.exports = class RTCClient{
       });
     })
   }
+
+  /**
+   * データチャンネルを作成
+   * @param {String} name データチャンネル名
+   * @returns {RTCDataChannel} データチャンネル
+   */
+  async createChannel(name){
+    const channel = this.rtc.createDataChannel(name);
+    return await new Promise(resolve=>{
+      channel.addEventListener("open",()=>{
+        resolve(channel);
+      })
+    });
+  }
+
+  /**
+   * メッセージを送信
+   * @param {RTCDataChannel} channel データチャンネル
+   * @param {Object} data 通信データオブジェクト 
+   */
+  send(channel,data){
+    channel.send(JSON.stringify(data));
+  }
 }
