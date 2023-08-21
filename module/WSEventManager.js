@@ -21,7 +21,7 @@ module.exports = class WSEventManager{
    */
   async handle(data){
     if(data.type === "OFFER_REQUEST"){
-      this.RTCManager.addConnection(data);
+      this.RTCManager.setConnection(data);
 
       DataManager.setClient({"status":"WAITING"});
 
@@ -32,7 +32,7 @@ module.exports = class WSEventManager{
         "data": (RTCManager.getRTCClient(data.client.id)).createAnswer(data.data)
       });
     }else if(data.type === "ANSWER_REQUEST"){
-      this.RTCManager.addConnection(data);
+      this.RTCManager.setConnection(data);
 
       DataManager.setClient({"status":"CONNECTING"});
     }else if(data.type === "DATA_REQUEST"){

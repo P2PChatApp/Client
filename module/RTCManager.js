@@ -4,9 +4,6 @@ const DataManager = require("./DataManager");
  * WebRTCの制御
  */
 module.exports = class RTCManager{
-  constructor(){
-    
-  }
   /**
    * イベント制御
    * @param {Object} data 通信データオブジェクト 
@@ -21,7 +18,7 @@ module.exports = class RTCManager{
     return DataManager.getConnection(clientId).rtc;
   }
 
-  addConnection(data){
+  setConnection(data){
     DataManager.setConnection({
       "client": data.client,
       "group": data.group,

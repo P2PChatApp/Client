@@ -45,7 +45,7 @@ module.exports = {
    * @returns {Array} 接続データの配列
    */
   getConnections:()=>{
-    return connections;
+    return Object.values(connections);
   },
   /**
    * 接続データを取得

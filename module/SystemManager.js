@@ -87,6 +87,34 @@ module.exports = class SystemManager{
   }
 
   /**
+   * 
+   * @param {Number} id 参加するグループID
+   * @returns 
+   */
+  joinGroup(id){
+    const group = this.getGroups().find(group=>group.id === id);
+    if(!group) return false;
+
+    DataManager.setConnection({
+      "client": DataManager.getClient(),
+      "group": DataManager.changeGroup({
+        "name": group.name,
+        "id": group.id,
+        "isPublic": group.isPublic,
+        "status": group.status
+      }),
+      "rtc": new RTCClient()
+    });
+
+    this.WSClient.send({
+      "type": "OFFER_REQUEST",
+      "client": DataManager.getClient(),
+      "group": DataManager.getGroup(),
+      "data": (RTCManager.getRTCClient(data.client.id)).createAnswer(data.data)
+    });
+  }
+
+  /**
    * 現在のグループを削除
    */
   deleteGroup(){
