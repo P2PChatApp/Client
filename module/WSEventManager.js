@@ -42,7 +42,7 @@ module.exports = class WSEventManager{
         "group": DataManager.getGroup()
       });
     }else if(data.type === "DATA_RESPONSE"){
-      DataManager.addPeer(data);
+      DataManager.setPeer(data);
     }
   }
 }

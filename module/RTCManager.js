@@ -5,7 +5,7 @@ const DataManager = require("./DataManager");
  */
 module.exports = class RTCManager{
   constructor(){
-    this.channel = null;
+    
   }
   /**
    * イベント制御
@@ -22,17 +22,21 @@ module.exports = class RTCManager{
   }
 
   addConnection(data){
-    DataManager.addConnection({
+    DataManager.setConnection({
       "client": data.client,
       "group": data.group,
       "rtc": new RTCClient()
     });
   }
 
+  setChannel(clientId){
+
+  }
+
   send(data){
     DataManager.getConnections()
       .forEach(connection=>{
-        connection.rtc.send(this.channel,data);
+        connection.rtc.send(connection.channel,data);
       });
   }
 }
