@@ -1,5 +1,5 @@
 const WSClient = require("./WSClient");
-const WSEventHandler = require("./WSEventHandler");
+const WSEventManager = require("./WSEventManager");
 const DataManager = require("./DataManager");
 
 const DataChecker = require("../lib/DataChecker");
@@ -10,29 +10,32 @@ const parse = require("../lib/parse");
 module.exports = class SystemManager{
   /**
    * WebScoket接続、基本システム構築
+   * @param {String} name ユーザー名
    */
-  constructor(){
-    this.clientId = this.createId();
+  constructor(name){
+    DataManager.setClient({
+      "id": this.createId(),
+      "name": name
+    });
 
     this.WSClient = new WSClient();
-    this.WSEventHandler = new WSEventHandler(this.WSClient,this.clientId);
+    this.WSEventManager = new WSEventManager(this.WSClient,DataManager.getClient().id);
 
     this.WSClient.ws.addEventListener("message",async(_data)=>{
       const data = parse(_data.toString());
       if(!data) return;
       if(!DataChecker(data)) return;
 
-      await this.WSEventHandler.handle(data);
+      await this.WSEventManager.handle(data);
     });
 
     setInterval(()=>{
       this.WSClient.send({
         "type": "DATA_REQUEST",
-        "clientId": this.clientId,
-        "status": DataManager.getStatus(),
+        "client": DataManager.getClient(),
         "group": DataManager.getGroup()
       });
-    },3000)
+    },3000);
   }
 
   /**
@@ -48,14 +51,13 @@ module.exports = class SystemManager{
   }
 
   /**
-   * データを更新します
+   * 
+   * @param {String} name 変更先のユーザーID
+   * @returns 変更後のクライアントデータ
    */
-  update(){
-    this.WSClient.send({
-      "type": "DATA_REQUEST",
-      "clientId": this.clientId,
-      "status": DataManager.getStatus(),
-      "group": DataManager.getGroup()
+  changeName(name){
+    return DataManager.setClient({
+      "name": name
     });
   }
 
@@ -64,13 +66,13 @@ module.exports = class SystemManager{
    * @returns {Array} 存在するグループの配列
    */
   getGroups(){
-    return DataManager.getClients()
-      .map(client=>client.group)
+    return DataManager.getPeers()
+      .map(peer=>peer.group)
       .filter(group=>Object.keys(group).length !== 0);
   }
 
   /**
-   * 
+   * グループの作成
    * @param {String} name グループ名 
    * @param {Boolean} isPublic チャットを公開するかどうか 
    * @returns {Object} グループデータ

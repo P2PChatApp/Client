@@ -4,11 +4,8 @@
 module.exports = class RTCClient{
   /**
    * RTCPeerConnection作成
-   * @param {Number} clientId 相手のClientID
    */
-  constructor(clientId){
-    this.clientId = clientId;
-
+  constructor(){
     this.rtc = new RTCPeerConnection({
       iceServers: [
         { urls: "stun:stun.l.google.com:19302" },

@@ -5,19 +5,6 @@ const DataManager = require("./DataManager");
  */
 module.exports = class RTCManager{
   /**
-   * RTCClient情報
-   * @param {Number} clientId 自分のClientID
-   */
-  constructor(clientId){
-    this.clientId = clientId;
-
-    DataManager.getConnections()
-      .forEach(connection=>{
-        
-      });
-  }
-
-  /**
    * イベント制御
    * @param {Object} data 通信データオブジェクト 
    */
@@ -25,5 +12,17 @@ module.exports = class RTCManager{
     if(data.type === "SEND_MESSAGE"){
 
     }
+  }
+
+  getRTCClient(clientId){
+    return DataManager.getConnection(clientId).rtc;
+  }
+
+  addConnection(data){
+    DataManager.addConnection({
+      "client": data.client,
+      "group": data.group,
+      "rtc": new RTCClient()
+    });
   }
 }

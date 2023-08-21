@@ -1,10 +1,16 @@
 let client = {};
-let status = "IDLING";
 let group = {};
-let connection = {};
-let clients = {};
+let connections = [];
+let peers = [];
 
 module.exports = {
+  /**
+   * クライアントデータを取得します
+   * @returns クライアントデータ
+   */
+  getClient(){
+    return client;
+  },
   /**
    * クライアントの情報を更新します
    * @param {Object} data 更新するクライアントオブジェクト
@@ -13,25 +19,10 @@ module.exports = {
   setClient(data){
     client = {
       "id": data.id||client.id,
-      "name": data.name||client.name
+      "name": data.name||client.name,
+      "status": data.status||client.status
     };
     return client;
-  },
-  /**
-   * 現在のステータスを取得します
-   * @returns {String} ステータス
-   */
-  getStatus(){
-    return status;
-  },
-  /**
-   * ステータスを変更します
-   * @param {String} name 変更するステータス
-   * @returns {String} 変更後のステータス
-   */
-  changeStatus(name){
-    status = name;
-    return status;
   },
   /**
    * 現在のグループを取得
@@ -54,7 +45,7 @@ module.exports = {
    * @returns {Array} 接続データの配列
    */
   getConnections(){
-    return Object.values(connection);
+    return connections;
   },
   /**
    * 接続データを取得
@@ -62,51 +53,58 @@ module.exports = {
    * @returns {Object} 接続データ
    */
   getConnection(clientId){
-    return connection[clientId];
+    return connections.find(connection=>connection.client.id === clientId);
   },
   /**
    * 接続データを追加
-   * @param {Number} clientId 追加する相手のClientID 
    * @param {Object} data 接続データ 
    */
-  addConnection(clientId,data){
-    connection[clientId] = data;
+  addConnection(data){
+    connections.push(data);
+  },
+    /**
+   * 接続データをすべて削除
+   */
+  deleteConnections(){
+    connections = [];
   },
   /**
    * 接続データを削除
    * @param {Number} clientId 削除する相手のClientID
    */
   deleteConnection(clientId){
-    delete connection[clientId];
+    connections.filter(connection=>connection.client.id !== clientId);
   },
   /**
-   * 全てのクライアントを取得します
-   * @returns {Array} クライアントの一覧
+   * 全てのピアを取得します
+   * @returns {Array} ピアの一覧
    */
-  getClients(){
-    return Object.values(clients);
+  getPeers(){
+    return peers;
   },
   /**
-   * クライアントを取得します
+   * ピアを取得します
    * @param {Number} clientId 取得するClientID 
    * @returns {Object} クライアントデータ
    */
-  getClient(clientId){
-    return clients[clientId];
+  getPeer(clientId){
+    return peers.find(peer=>peer.client.id === clientId);
   },
   /**
-   * クライアントを追加します
-   * @param {Number} clientId 追加する相手のClientID 
-   * @param {Object} data クライアントデータ 
+   * ピアを追加します
+   * @param {Object} data 通信データ 
    */
-  addClient(clientId,data){
-    clients[clientId] = data;
+  addPeer(data){
+    peers.push({
+      "client": data.client,
+      "group": data.group
+    });
   },
   /**
-   * クライアントを削除します
+   * ピアを削除します
    * @param {Number} clientId 削除する相手のClientID
    */
-  deleteClient(clientId){
-    delete clients[clientId];
+  deletePeer(clientId){
+    peers.filter(peer=>peer.client.id !== clientId)
   }
 }
