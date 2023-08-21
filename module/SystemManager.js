@@ -15,7 +15,7 @@ module.exports = class SystemManager{
    */
   constructor(name){
     DataManager.setClient({
-      "id": this.createId(),
+      "id": this.createId(10),
       "name": name
     });
 
@@ -39,12 +39,15 @@ module.exports = class SystemManager{
 
   /**
    * 9桁の数字のIDを生成します
-   * @returns {Number} 生成したID
+   * @param {Number} length 生成する長さ 
+   * @returns {String} 生成したID
    */
-  createId(){
+  createId(length){
+    const str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let id = "";
-    for(let i = 0;i < 10;i++){
-      id += (Math.floor(Math.random()*9)+1).toString(); 
+    for(let i = 0;i < length;i++){
+      const random = Math.floor(Math.random()*str.length);
+      id += str.charAt(random);
     }
     return id;
   }
@@ -77,11 +80,11 @@ module.exports = class SystemManager{
    * @returns {Object} グループデータ
    */
   createGroup(name,isPublic){
-    return DataManager.changeGroup({
+    return DataManager.setGroup({
       "name": name,
-      "id": this.createId(),
+      "id": this.createId(8),
       "isPublic": isPublic,
-      "status": "WAITING"
+      "status": "INACTIVE"
     });
   }
 
@@ -89,7 +92,7 @@ module.exports = class SystemManager{
    * 現在のグループを削除
    */
   deleteGroup(){
-    DataManager.changeGroup({});
+    DataManager.setGroup({});
   }
 
   /**
@@ -101,7 +104,7 @@ module.exports = class SystemManager{
     const group = this.getGroups().find(group=>group.id === id);
     if(!group) return false;
 
-    return DataManager.changeGroup({
+    return DataManager.setGroup({
       "name": group.name,
       "id": group.id,
       "isPublic": group.isPublic,

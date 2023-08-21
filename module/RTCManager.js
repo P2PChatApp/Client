@@ -44,12 +44,15 @@ module.exports = class RTCManager{
 
   /**
    * P2P通信の開始
-   * @param {Number} clientId 接続先のClientID
+   * @param {String} clientId 接続先のClientID
    */
   connect(clientId){
     const rtc = DataManager.getConnection(clientId).rtc;
     DataManager.setConnection(clientId,{
       "channel": rtc.createChannel("chat")
+    });
+    DataManager.setGroup({
+      "status": "ACTIVE"
     });
     this.addEvent(rtc);
   }

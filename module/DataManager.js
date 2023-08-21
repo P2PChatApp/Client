@@ -37,8 +37,13 @@ module.exports = {
    * @param {Object} data 変更するグループデータ
    * @returns {Object} 変更後のグループデータ
    */
-  changeGroup:(data)=>{
-    group = data;
+  setGroup:(data)=>{
+    group = {
+      "name": data.name||group.name,
+      "id": data.id||group.id,
+      "isPublic": data.isPublic,
+      "status": data.status||group.status
+    };
     return group;
   },
   /**
@@ -50,7 +55,7 @@ module.exports = {
   },
   /**
    * 接続データを取得
-   * @param {Number} clientId 取得する相手のClientID
+   * @param {String} clientId 取得する相手のClientID
    * @returns {Object} 接続データ
    */
   getConnection:(clientId)=>{
@@ -58,7 +63,7 @@ module.exports = {
   },
   /**
    * 接続データを追加
-   * @param {Number} clientId 設定するClientID
+   * @param {String} clientId 設定するClientID
    * @param {Object} data 接続データ
    * @returns {Object} 追加したデータ
    */
@@ -80,7 +85,7 @@ module.exports = {
   },
   /**
    * 接続データを削除
-   * @param {Number} clientId 削除する相手のClientID
+   * @param {String} clientId 削除する相手のClientID
    */
   deleteConnection:(clientId)=>{
     delete connections[clientId];
@@ -94,7 +99,7 @@ module.exports = {
   },
   /**
    * ピアを取得します
-   * @param {Number} clientId 取得するClientID 
+   * @param {String} clientId 取得するClientID 
    * @returns {Object} クライアントデータ
    */
   getPeer:(clientId)=>{
@@ -114,7 +119,7 @@ module.exports = {
   },
   /**
    * ピアを削除します
-   * @param {Number} clientId 削除する相手のClientID
+   * @param {String} clientId 削除する相手のClientID
    */
   deletePeer:(clientId)=>{
     delete peers[clientId];
