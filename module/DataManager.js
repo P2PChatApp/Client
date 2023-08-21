@@ -2,6 +2,7 @@ let client = {};
 let group = {};
 let connections = {};
 let peers = {};
+let messages = [];
 
 module.exports = {
   /**
@@ -57,16 +58,19 @@ module.exports = {
   },
   /**
    * 接続データを追加
-   * @param {Object} data 接続データ 
+   * @param {Number} clientId 設定するClientID
+   * @param {Object} data 接続データ
+   * @returns {Object} 追加したデータ
    */
-  setConnection:(data)=>{
-    const connection = connections[data.client.id];
-    connections[data.client.id] = {
+  setConnection:(clientId,data)=>{
+    const connection = connections[clientId];
+    connections[clientId] = {
       "client": data.client||connection?.client,
       "group": data.group||connection?.group,
       "rtc": data.rtc||connection?.rtc,
       "channel": data.channel||connection?.channel
     };
+    return connections[data.client.id];
   },
   /**
    * 接続データをすべて削除
@@ -99,12 +103,14 @@ module.exports = {
   /**
    * ピアを追加します
    * @param {Object} data 通信データ 
+   * @returns {Object} 追加されたデータ
    */
   setPeer:(data)=>{
     peers[data.client.id] = {
       "client": data.client,
       "group": data.group
     };
+    return peers[data.client.id];
   },
   /**
    * ピアを削除します
@@ -112,5 +118,22 @@ module.exports = {
    */
   deletePeer:(clientId)=>{
     delete peers[clientId];
+  },
+  /**
+   * メッセージを保存します
+   * @param {Object} data 通信でーた
+   */
+  addMessage:(data)=>{
+    messages.push({
+      "client": data.client,
+      "group": data.group,
+      "content": data.data
+    });
+  },
+  /**
+   * 全てのメッセージを削除します
+   */
+  deleteMessages:()=>{
+    messages = [];
   }
 }

@@ -3,6 +3,7 @@ const WSEventManager = require("./WSEventManager");
 const DataManager = require("./DataManager");
 
 const DataChecker = require("../lib/DataChecker");
+const Builder = require("../lib/Builder");
 const parse = require("../lib/parse");
 /**
  * システム管理
@@ -30,11 +31,9 @@ module.exports = class SystemManager{
     });
 
     setInterval(()=>{
-      this.WSClient.send({
-        "type": "DATA_REQUEST",
-        "client": DataManager.getClient(),
-        "group": DataManager.getGroup()
-      });
+      this.WSClient.send(Builder(
+        "DATA_REQUEST"
+      ));
     },3000);
   }
 
@@ -51,7 +50,7 @@ module.exports = class SystemManager{
   }
 
   /**
-   * 
+   * ユーザー名の変更
    * @param {String} name 変更先のユーザーID
    * @returns 変更後のクライアントデータ
    */
@@ -87,7 +86,14 @@ module.exports = class SystemManager{
   }
 
   /**
-   * 
+   * 現在のグループを削除
+   */
+  deleteGroup(){
+    DataManager.changeGroup({});
+  }
+
+  /**
+   * グループに参加する
    * @param {Number} id 参加するグループID
    * @returns 
    */
@@ -95,29 +101,42 @@ module.exports = class SystemManager{
     const group = this.getGroups().find(group=>group.id === id);
     if(!group) return false;
 
-    DataManager.setConnection({
-      "client": DataManager.getClient(),
-      "group": DataManager.changeGroup({
-        "name": group.name,
-        "id": group.id,
-        "isPublic": group.isPublic,
-        "status": group.status
-      }),
-      "rtc": new RTCClient()
-    });
-
-    this.WSClient.send({
-      "type": "OFFER_REQUEST",
-      "client": DataManager.getClient(),
-      "group": DataManager.getGroup(),
-      "data": (RTCManager.getRTCClient(data.client.id)).createAnswer(data.data)
+    return DataManager.changeGroup({
+      "name": group.name,
+      "id": group.id,
+      "isPublic": group.isPublic,
+      "status": group.status
     });
   }
 
   /**
-   * 現在のグループを削除
+   * 設定されているグループに接続
    */
-  deleteGroup(){
-    DataManager.changeGroup({});
+  connect(){
+    const peer = DataManager.getPeers().find(peer=>peer.group?.id === DataManager.getGroup().id)
+    const connection = DataManager.setConnection(peer.client.id,{
+      "client": peer.client,
+      "group": peer.group,
+      "rtc": new RTCClient()
+    });
+
+    this.WSClient.send(Builder(
+      "OFFER_REQUEST",
+      connection.rtc.createOffer()
+    ));
+  }
+
+  /**
+   * 接続中のピアにメッセージを送信します
+   * @param {String} content メッセージ内容 
+   */
+  send(content){
+    DataManager.getConnections()
+      .forEach(connection=>{
+        connection.rtc.send(connection.channel,Builder(
+          "SEND_MESSAGE",
+          content
+        ));
+      });
   }
 }
