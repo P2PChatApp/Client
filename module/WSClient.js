@@ -1,3 +1,4 @@
+const parse = require("../lib/parse");
 /**
  * WebSocketクライアント
  */
@@ -14,6 +15,12 @@ module.exports = class WSClient{
     
     this.ws.addEventListener("error",(error)=>{
       console.log(`WebSocket Error: ${error}`); 
+    });
+    
+    this.ws.addEventListener("message",async(_data)=>{
+      const data = parse(_data.toString());
+      if(!data) return;
+      console.log(`WebSocket Data: ${data}`);
     });
   }
 

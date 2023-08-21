@@ -1,5 +1,6 @@
 const WSClient = require("./WSClient");
 const WSEventHandler = require("./WSEventHandler");
+const DataManager = require("./DataManager");
 
 const DataChecker = require("../lib/DataChecker");
 const parse = require("../lib/parse");
@@ -8,22 +9,27 @@ const parse = require("../lib/parse");
  */
 module.exports = class SystemManager{
   /**
-   * WebScoket接続の開始
+   * WebScoket接続、基本システム構築
    */
   constructor(){
     this.clientId = this.createId();
-    this.group = {};
 
     this.WSClient = new WSClient();
-    this.WSEventHandler = new WSEventHandler(WSClient.ws,this.clientId);
+    this.WSEventHandler = new WSEventHandler(this.WSClient,this.clientId);
 
     this.WSClient.ws.addEventListener("message",async(_data)=>{
       const data = parse(_data.toString());
       if(!data) return;
-      console.log(`WebSocket Data: ${data}`);
       if(!DataChecker(data)) return;
 
-      await WSEventHandler.handle(data);
+      await this.WSEventHandler.handle(data);
+    });
+
+    this.WSClient.send({
+      "type": "DATA_REQUEST",
+      "clientId": this.clientId,
+      "status": DataManager.getStatus(),
+      "group": DataManager.getGroup()
     });
   }
 
@@ -46,23 +52,18 @@ module.exports = class SystemManager{
    * @returns {Object} グループデータ
    */
   createGroup(name,isPublic){
-    this.group = {
+    return DataManager.changeGroup({
       "name": name,
       "id": this.createId(),
       "isPublic": isPublic,
       "status": "WAITING"
-    };
-    return this.group;
+    });
   }
 
   /**
    * 現在のグループを削除
    */
   deleteGroup(){
-    this.group = {};
-  }
-
-  startRTC(){
-
+    DataManager.changeGroup({});
   }
 }
