@@ -11,7 +11,7 @@ module.exports = class RTCManager{
   constructor(clientId){
     this.clientId = clientId;
 
-    Object.values(DataManager.getConnections())
+    DataManager.getConnections()
       .forEach(connection=>{
         
       });
