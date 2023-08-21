@@ -7,7 +7,7 @@ module.exports = class WSClient{
    * 接続の開始
    */
   constructor(){
-    this.ws = new WebSocket("ws://signaling.gakerbot.net");
+    this.ws = new WebSocket("ws://ws.gakerbot.net");
 
     this.ws.addEventListener("close",(code,reason)=>{
       console.log(`WebSocket Close: ${code} ${reason}`);
