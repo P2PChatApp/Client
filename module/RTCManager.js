@@ -1,15 +1,20 @@
+const RTCClient = require("./RTCClient");
+const DataManager = require("./DataManager");
 /**
  * WebRTCの制御
  */
 module.exports = class RTCManager{
   /**
    * RTCClient情報
-   * @param {RTCClient} rtc RTCClientインスタンス
    * @param {Number} clientId 自分のClientID
    */
-  constructor(rtc,clientId){
-    this.rtc = rtc;
+  constructor(clientId){
     this.clientId = clientId;
+
+    Object.values(DataManager.getConnections())
+      .forEach(connection=>{
+        
+      });
   }
 
   /**
@@ -20,9 +25,5 @@ module.exports = class RTCManager{
     if(data.type === "SEND_MESSAGE"){
 
     }
-  }
-
-  send(data){
-
   }
 }
