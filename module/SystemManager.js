@@ -133,6 +133,21 @@ module.exports = class SystemManager{
   }
 
   /**
+   * グループから切断
+   */
+  disconnect(){
+    DataManager.getConnections()
+      .forEach(connection=>{
+        connection.rtc.send(connection.channel,Builder(
+          "DISCONNECT"
+        ));
+      });
+
+    DataManager.deleteConnections();
+    DataManager.deleteMessages();
+  }
+
+  /**
    * 接続中のピアにメッセージを送信します
    * @param {String} content メッセージ内容 
    */

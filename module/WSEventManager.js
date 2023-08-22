@@ -27,7 +27,12 @@ module.exports = class WSEventManager{
     if(data.type === "OFFER_REQUEST"){
       if(data.group.id !== DataManager.getGroup().id) return;
 
-      this.RTCManager.setConnection(data);
+      DataManager.setConnection(data.client.id,{
+        "client": data.client,
+        "group": data.group,
+        "rtc": new RTCClient()
+      });
+
       DataManager.setClient({"status":"WAITING"});
 
       this.WSClient.send(Builder(
@@ -37,7 +42,22 @@ module.exports = class WSEventManager{
     }else if(data.type === "ANSWER_REQUEST"){
       if(data.group.id !== DataManager.getGroup().id) return;
 
-      this.RTCManager.setConnection(data);
+      DataManager.setConnection(data.client.id,{
+        "client": data.client,
+        "group": data.group,
+        "rtc": new RTCClient()
+      });
+
+      this.WSClient.send(Builder(
+        "READY",
+        "",
+        data.client.id
+      ));
+
+      this.RTCManager.connect(data.client.id);
+    }else if(data.type === "READY"){
+      if(data.group.id !== DataManager.getGroup().id) return;
+
       DataManager.setClient({"status":"CONNECTING"});
 
       this.RTCManager.connect(data.client.id);

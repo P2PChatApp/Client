@@ -28,18 +28,9 @@ module.exports = class RTCManager{
   handle(data){
     if(data.type === "SEND_MESSAGE"){
       DataManager.addMessage(data);
+    }else if(data.type === "DISCONNECT"){
+      DataManager.deleteConnection(data.clent.id);
     }
-  }
-  /**
-   * 接続データの作成
-   * @param {Object} data 通信データ 
-   */
-  setConnection(data){
-    DataManager.setConnection(data.client.id,{
-      "client": data.client,
-      "group": data.group,
-      "rtc": new RTCClient()
-    });
   }
 
   /**
@@ -51,20 +42,11 @@ module.exports = class RTCManager{
     DataManager.setConnection(clientId,{
       "channel": rtc.createChannel("chat")
     });
+
     DataManager.setGroup({
       "status": "ACTIVE"
     });
-    this.addEvent(rtc);
-  }
 
-  /**
-   * グループにメッセージを送信
-   * @param {Object} data 通信オブジェクト
-   */
-  send(data){
-    DataManager.getConnections()
-      .forEach(connection=>{
-        connection.rtc.send(connection.channel,data);
-      });
+    this.addEvent(rtc);
   }
 }
