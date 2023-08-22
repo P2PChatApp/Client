@@ -98,7 +98,7 @@ module.exports = class SystemManager{
   /**
    * グループに参加する
    * @param {Number} id 参加するグループID
-   * @returns 
+   * @returns 成功したら参加したグループデータ
    */
   joinGroup(id){
     const group = this.getGroups().find(group=>group.id === id);
