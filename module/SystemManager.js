@@ -116,17 +116,20 @@ module.exports = class SystemManager{
    * 設定されているグループに接続
    */
   connect(){
-    const peer = DataManager.getPeers().find(peer=>peer.group?.id === DataManager.getGroup().id)
-    const connection = DataManager.setConnection(peer.client.id,{
-      "client": peer.client,
-      "group": peer.group,
-      "rtc": new RTCClient()
+    const peers = DataManager.getPeers().filter(peer=>peer.group?.id === DataManager.getGroup().id);
+    peers.forEach(peer=>{
+      const connection = DataManager.setConnection(peer.client.id,{
+        "client": peer.client,
+        "group": peer.group,
+        "rtc": new RTCClient()
+      });
+  
+      this.WSClient.send(Builder(
+        "OFFER_REQUEST",
+        connection.rtc.createOffer(),
+        peer.client.id
+      ));
     });
-
-    this.WSClient.send(Builder(
-      "OFFER_REQUEST",
-      connection.rtc.createOffer()
-    ));
   }
 
   /**

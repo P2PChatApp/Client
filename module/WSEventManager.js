@@ -22,6 +22,8 @@ module.exports = class WSEventManager{
    * @param {Object} data 通信データオブジェクト 
    */
   async handle(data){
+    if(data.address !== DataManager.getClient().id) return;
+    
     if(data.type === "OFFER_REQUEST"){
       if(data.group.id !== DataManager.getGroup().id) return;
 

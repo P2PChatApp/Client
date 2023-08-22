@@ -22,7 +22,7 @@ module.exports = class RTCClient{
     await this.rtc.setLocalDescription(offer);
 
     await this.getCandidates();
-    return this.rtc.localDescription;;
+    return this.rtc.localDescription;
   }
 
   /**
