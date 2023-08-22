@@ -46,8 +46,7 @@ module.exports = class SystemManager{
     const str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let id = "";
     for(let i = 0;i < length;i++){
-      const random = Math.floor(Math.random()*str.length);
-      id += str.charAt(random);
+      id += str.charAt(Math.floor(Math.random()*str.length));
     }
     return id;
   }
@@ -80,6 +79,8 @@ module.exports = class SystemManager{
    * @returns {Object} グループデータ
    */
   createGroup(name,isPublic){
+    DataManager.setClient({"status":"WAITING"});
+
     return DataManager.setGroup({
       "name": name,
       "id": this.createId(8),
@@ -92,6 +93,7 @@ module.exports = class SystemManager{
    * 現在のグループを削除
    */
   deleteGroup(){
+    DataManager.setClient({"status":"IDLING"});
     DataManager.setGroup({});
   }
 
@@ -145,6 +147,7 @@ module.exports = class SystemManager{
 
     DataManager.deleteConnections();
     DataManager.deleteMessages();
+    DataManager.setClient({"status":"IDLING"});
   }
 
   /**

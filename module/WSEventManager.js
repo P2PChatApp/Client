@@ -33,8 +33,6 @@ module.exports = class WSEventManager{
         "rtc": new RTCClient()
       });
 
-      DataManager.setClient({"status":"WAITING"});
-
       this.WSClient.send(Builder(
         "ANSWER_REQUEST",
         DataManager.getConnection(data.client.id).rtc.createAnswer(data.data)
@@ -53,6 +51,8 @@ module.exports = class WSEventManager{
         "",
         data.client.id
       ));
+
+      DataManager.setClient({"status":"CONNECTING"});
 
       this.RTCManager.connect(data.client.id);
     }else if(data.type === "READY"){

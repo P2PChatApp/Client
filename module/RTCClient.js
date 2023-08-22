@@ -61,7 +61,7 @@ module.exports = class RTCClient{
     return await new Promise(resolve=>{
       channel.addEventListener("open",()=>{
         resolve(channel);
-      })
+      });
     });
   }
 
