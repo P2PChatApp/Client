@@ -13,7 +13,6 @@
     },
     "globals": {},
     "rules": {
-      "no-var": "error",
       "no-undef": "error",
       "eqeqeq": "error",
       "no-loss-of-precision": "error",
