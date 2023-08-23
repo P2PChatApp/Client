@@ -1,5 +1,5 @@
 const DataManager = require("./DataManager");
-const WSClient = require("./WSClient");
+const RTCClient = require("./RTCClient");
 const RTCManager = require("./RTCManager");
 
 const Builder = require("../lib/Builder");

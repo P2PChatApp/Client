@@ -1,5 +1,6 @@
 const WSClient = require("./WSClient");
 const WSEventManager = require("./WSEventManager");
+const RTCClient = require("./RTCClient");
 const DataManager = require("./DataManager");
 
 const DataChecker = require("../lib/DataChecker");

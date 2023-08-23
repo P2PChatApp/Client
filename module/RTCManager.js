@@ -1,4 +1,3 @@
-const RTCClient = require("./RTCClient");
 const DataManager = require("./DataManager");
 
 const parse = require("../lib/parse");

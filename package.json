@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "./node_modules/.bin/eslint ./",
     "build": "esbuild --bundle --sourcemap=external --format=cjs --platform=browser --target=es2020 --outfile=./dist/Client.js --keep-names=true ./index.js"
   },
   "repository": {
@@ -18,6 +19,7 @@
   },
   "homepage": "https://github.com/P2PChatApp/Client#readme",
   "devDependencies": {
-    "esbuild": "^0.19.2"
+    "esbuild": "^0.19.2",
+    "eslint": "^8.47.0"
   }
 }
