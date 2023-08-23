@@ -73,4 +73,11 @@ module.exports = class RTCClient{
   send(channel,data){
     channel.send(JSON.stringify(data));
   }
+
+  /**
+   * 接続を終了します
+   */
+  close(){
+    this.rtc.close();
+  }
 }

@@ -14,7 +14,8 @@ module.exports = class RTCManager{
     if(data.type === "SEND_MESSAGE"){
       DataManager.addMessage(data);
     }else if(data.type === "DISCONNECT"){
-      DataManager.deleteConnection(data.clent.id);
+      DataManager.getConnection(data.client.id).rtc.close();
+      DataManager.deleteConnection(data.client.id);
     }
   }
 
@@ -32,6 +33,10 @@ module.exports = class RTCManager{
       "status": "ACTIVE"
     });
 
+    connection.channel.addEventListener("open",()=>{
+      console.log("WebRTC Open");
+    });
+
     connection.channel.addEventListener("message",event=>{
       const data = parse(event.data.toString());
       if(!data) return;
@@ -39,6 +44,20 @@ module.exports = class RTCManager{
 
       if(!DataChecker(data)) return;
       this.handle(data);
+    });
+
+    connection.channel.addEventListener("error",event=>{
+      console.log(`WebRTC Error: ${event.error}`);
+
+      DataManager.getConnection(clientId).rtc.close();
+      DataManager.deleteConnection(clientId);
+    });
+
+    connection.channel.addEventListener("close",()=>{
+      console.log("WebRTC Close");
+
+      DataManager.getConnection(clientId).rtc.close();
+      DataManager.deleteConnection(clientId);
     });
   }
 }

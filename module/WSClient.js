@@ -9,6 +9,10 @@ module.exports = class WSClient{
   constructor(){
     this.ws = new WebSocket("ws://ws.gakerbot.net");
 
+    this.ws.addEventListener("open",()=>{
+      console.log("WebSocket Open");
+    });
+
     this.ws.addEventListener("close",(code,reason)=>{
       console.log(`WebSocket Close: ${code} ${reason}`);
     });

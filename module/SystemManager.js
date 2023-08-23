@@ -143,6 +143,7 @@ module.exports = class SystemManager{
         connection.rtc.send(connection.channel,Builder(
           "DISCONNECT"
         ));
+        connection.rtc.close();
       });
 
     DataManager.deleteConnections();
