@@ -1,3 +1,1 @@
-const SystemManager = require("./module/SystemManager");
-
-new SystemManager("NAME");
+const System = new require("./module/SystemManager")();

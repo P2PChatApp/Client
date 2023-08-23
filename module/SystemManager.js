@@ -12,12 +12,11 @@ const parse = require("../lib/parse");
 module.exports = class SystemManager{
   /**
    * WebScoket接続、基本システム構築
-   * @param {String} name ユーザー名
    */
-  constructor(name){
+  constructor(){
     DataManager.setClient({
       "id": this.createId(10),
-      "name": name
+      "name": this.createId(5)
     });
 
     this.WSClient = new WSClient();
