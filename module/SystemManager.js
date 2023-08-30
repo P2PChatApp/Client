@@ -34,6 +34,11 @@ module.exports = class SystemManager{
       this.WSClient.send(Builder(
         "DATA_REQUEST"
       ));
+
+      DataManager.getPeers()
+        .forEach(peer=>{
+          if(new Date() - new Date(peer.time) < 10000) return DataManager.deletePeer(peer.client.id);
+        });
     },3000);
   }
 

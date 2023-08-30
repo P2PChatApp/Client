@@ -63,12 +63,11 @@ module.exports = class WSEventManager{
       this.RTCManager.connect(data.client.id);
     }else if(data.type === "DATA_REQUEST"){
       this.WSClient.send(Builder(
-        "DATA_RESPONSE"
+        "DATA_RESPONSE",
+        new Date()
       ));
     }else if(data.type === "DATA_RESPONSE"){
       DataManager.setPeer(data);
-    }else if(data.type = "DISCONNECT"){
-      DataManager.deletePeer(data.client.id);
     }
   }
 }

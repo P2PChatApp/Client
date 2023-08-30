@@ -113,7 +113,8 @@ module.exports = {
   setPeer:(data)=>{
     peers[data.client.id] = {
       "client": data.client,
-      "group": data.group
+      "group": data.group,
+      "time": data.data
     };
     return peers[data.client.id];
   },
