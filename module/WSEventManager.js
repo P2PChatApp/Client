@@ -9,7 +9,7 @@ const Builder = require("../lib/Builder");
 module.exports = class WSEventManager{
   /**
    * WSClient情報
-   * @param {WSClient} ws WSClientインスタンス
+   * @param {WSClient} WSClient WSClientインスタンス
    */
   constructor(WSClient){
     this.WSClient = WSClient;
@@ -67,6 +67,8 @@ module.exports = class WSEventManager{
       ));
     }else if(data.type === "DATA_RESPONSE"){
       DataManager.setPeer(data);
+    }else if(data.type = "DISCONNECT"){
+      DataManager.deletePeer(data.client.id);
     }
   }
 }

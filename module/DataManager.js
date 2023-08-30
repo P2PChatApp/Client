@@ -126,7 +126,7 @@ module.exports = {
   },
   /**
    * メッセージを保存します
-   * @param {Object} data 通信でーた
+   * @param {Object} data 通信データ
    */
   addMessage:(data)=>{
     messages.push({
