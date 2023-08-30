@@ -16,7 +16,7 @@ module.exports = class SystemManager{
   constructor(){
     DataManager.setClient({
       "id": this.createId(10),
-      "name": this.createId(5)
+      "name": this.createId(6)
     });
 
     this.WSClient = new WSClient();
@@ -49,17 +49,6 @@ module.exports = class SystemManager{
       id += str.charAt(Math.floor(Math.random()*str.length));
     }
     return id;
-  }
-
-  /**
-   * ユーザー名の変更
-   * @param {String} name 変更先のユーザーID
-   * @returns 変更後のクライアントデータ
-   */
-  changeName(name){
-    return DataManager.setClient({
-      "name": name
-    });
   }
 
   /**
