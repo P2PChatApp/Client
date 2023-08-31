@@ -147,14 +147,14 @@ module.exports = class SystemManager{
 
   /**
    * 接続中のピアにメッセージを送信します
-   * @param {String} content メッセージ内容 
+   * @param {Object} data メッセージオブジェクト
    */
-  send(content){
+  send(data){
     DataManager.getConnections()
       .forEach(connection=>{
         connection.rtc.send(connection.channel,Builder(
           "SEND_MESSAGE",
-          content
+          data
         ));
       });
   }

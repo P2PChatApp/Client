@@ -133,7 +133,7 @@ module.exports = {
     messages.push({
       "client": data.client,
       "group": data.group,
-      "content": data.data
+      "data": data.data
     });
   },
   /**
