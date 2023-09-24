@@ -7,19 +7,6 @@ const DataChecker = require("../lib/DataChecker");
  */
 module.exports = class RTCManager{
   /**
-   * イベント制御
-   * @param {Object} data 通信データオブジェクト 
-   */
-  handle(data){
-    if(data.type === "SEND_MESSAGE"){
-      DataManager.addMessage(data);
-    }else if(data.type === "DISCONNECT"){
-      DataManager.getConnection(data.client.id).rtc.close();
-      DataManager.deleteConnection(data.client.id);
-    }
-  }
-
-  /**
    * P2P通信の開始
    * @param {String} clientId 接続先のClientID
    */
@@ -29,9 +16,7 @@ module.exports = class RTCManager{
       "channel": connection.rtc.createChannel("chat")
     });
 
-    DataManager.setGroup({
-      "status": "ACTIVE"
-    });
+    DataManager.setGroup({"status": "ACTIVE"});
 
     connection.channel.addEventListener("open",()=>{
       console.log("WebRTC Open");
@@ -43,7 +28,13 @@ module.exports = class RTCManager{
       console.log(`WebRTC Data: ${data}`);
 
       if(!DataChecker(data)) return;
-      this.handle(data);
+
+      if(data.type === "SEND_MESSAGE"){
+        DataManager.addMessage(data);
+      }else if(data.type === "DISCONNECT"){
+        DataManager.getConnection(data.client.id).rtc.close();
+        DataManager.deleteConnection(data.client.id);
+      }
     });
 
     connection.channel.addEventListener("error",event=>{

@@ -1,5 +1,4 @@
-const WSClient = require("./WSClient");
-const WSEventManager = require("./WSEventManager");
+const wsClient = require("./wsClient");
 const RTCClient = require("./RTCClient");
 const DataManager = require("./DataManager");
 
@@ -19,21 +18,10 @@ module.exports = class SystemManager{
       "name": this.createId(6)
     });
 
-    this.WSClient = new WSClient();
-    this.WSEventManager = new WSEventManager(this.WSClient,DataManager.getClient().id);
-
-    this.WSClient.ws.addEventListener("message",async(_data)=>{
-      const data = parse(_data.toString());
-      if(!data) return;
-      if(!DataChecker(data)) return;
-
-      await this.WSEventManager.handle(data);
-    });
+    this.wsClient = new wsClient();
 
     setInterval(()=>{
-      this.WSClient.send(Builder(
-        "DATA_REQUEST"
-      ));
+      this.wsClient.send(Builder("DATA_REQUEST"));
 
       DataManager.getPeers()
         .forEach(peer=>{
@@ -97,7 +85,9 @@ module.exports = class SystemManager{
    * @returns 成功したら参加したグループデータ
    */
   joinGroup(id){
-    const group = this.getGroups().find(group=>group.id === id);
+    const group = this.getGroups()
+      .find(group=>group.id === id);
+
     if(!group) return false;
 
     return DataManager.setGroup({
@@ -112,7 +102,9 @@ module.exports = class SystemManager{
    * 設定されているグループに接続
    */
   connect(){
-    const peers = DataManager.getPeers().filter(peer=>peer.group?.id === DataManager.getGroup().id);
+    const peers = DataManager.getPeers()
+      .filter(peer=>peer.group?.id === DataManager.getGroup().id);
+
     peers.forEach(peer=>{
       const connection = DataManager.setConnection(peer.client.id,{
         "client": peer.client,
@@ -120,7 +112,7 @@ module.exports = class SystemManager{
         "rtc": new RTCClient()
       });
   
-      this.WSClient.send(Builder(
+      this.wsClient.send(Builder(
         "OFFER_REQUEST",
         connection.rtc.createOffer(),
         peer.client.id
@@ -134,9 +126,10 @@ module.exports = class SystemManager{
   disconnect(){
     DataManager.getConnections()
       .forEach(connection=>{
-        connection.rtc.send(connection.channel,Builder(
-          "DISCONNECT"
-        ));
+        connection.rtc.send(
+          connection.channel,
+          Builder("DISCONNECT")
+        );
         connection.rtc.close();
       });
 
@@ -152,10 +145,10 @@ module.exports = class SystemManager{
   send(data){
     DataManager.getConnections()
       .forEach(connection=>{
-        connection.rtc.send(connection.channel,Builder(
-          "SEND_MESSAGE",
-          data
-        ));
+        connection.rtc.send(
+          connection.channel,
+          Builder("SEND_MESSAGE",data)
+        );
       });
   }
 }
