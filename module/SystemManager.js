@@ -1,4 +1,4 @@
-const wsClient = require("./wsClient");
+const WSClient = require("./WSClient");
 const RTCClient = require("./RTCClient");
 const DataManager = require("./DataManager");
 
@@ -18,10 +18,10 @@ module.exports = class SystemManager{
       "name": this.createId(6)
     });
 
-    this.wsClient = new wsClient();
+    this.WSClient = new WSClient();
 
     setInterval(()=>{
-      this.wsClient.send(Builder("DATA_REQUEST"));
+      this.WSClient.send(Builder("DATA_REQUEST"));
 
       DataManager.getPeers()
         .forEach(peer=>{
@@ -112,7 +112,7 @@ module.exports = class SystemManager{
         "rtc": new RTCClient()
       });
   
-      this.wsClient.send(Builder(
+      this.WSClient.send(Builder(
         "OFFER_REQUEST",
         await connection.rtc.createOffer(),
         peer.client.id
