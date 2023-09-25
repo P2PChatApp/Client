@@ -1,5 +1,4 @@
 const DataManager = require("./DataManager");
-
 const parse = require("../lib/parse");
 const DataChecker = require("../lib/DataChecker");
 /**
@@ -12,17 +11,15 @@ module.exports = class RTCManager{
    */
   async connect(clientId){
     const connection = DataManager.getConnection(clientId);
-    DataManager.setConnection(clientId,{
-      "channel": await connection.rtc.createChannel("chat")
-    });
+    await connection.rtc.createChannel("chat");
 
     DataManager.setGroup({"status": "ACTIVE"});
 
-    connection.channel.addEventListener("open",()=>{
+    connection.rtc.channel.addEventListener("open",()=>{
       console.log("WebRTC Open");
     });
 
-    connection.channel.addEventListener("message",event=>{
+    connection.rtc.channel.addEventListener("message",event=>{
       const data = parse(event.data.toString());
       if(!data) return;
       console.log(`WebRTC Data: ${data}`);
@@ -37,14 +34,14 @@ module.exports = class RTCManager{
       }
     });
 
-    connection.channel.addEventListener("error",event=>{
+    connection.rtc.channel.addEventListener("error",event=>{
       console.log(`WebRTC Error: ${event.error}`);
 
       DataManager.getConnection(clientId).rtc.close();
       DataManager.deleteConnection(clientId);
     });
 
-    connection.channel.addEventListener("close",()=>{
+    connection.rtc.channel.addEventListener("close",()=>{
       console.log("WebRTC Close");
 
       DataManager.getConnection(clientId).rtc.close();

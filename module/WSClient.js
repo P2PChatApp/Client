@@ -50,6 +50,8 @@ module.exports = class WSClient{
           await DataManager.getConnection(data.client.id).rtc.createAnswer(data.data)
         ));
       }else if(data.type === "ANSWER_REQUEST"){
+        await DataManager.getConnection(data.client.id).rtc.setAnswer(data.data);
+
         this.ws.send(Builder(
           "READY",
           "",

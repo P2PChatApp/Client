@@ -72,8 +72,7 @@ module.exports = {
     connections[clientId] = {
       "client": data.client||connection?.client,
       "group": data.group||connection?.group,
-      "rtc": data.rtc||connection?.rtc,
-      "channel": data.channel||connection?.channel
+      "rtc": data.rtc||connection?.rtc
     };
     return connections[data.client.id];
   },

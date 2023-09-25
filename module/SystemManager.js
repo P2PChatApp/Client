@@ -70,15 +70,7 @@ module.exports = class SystemManager{
       "status": "INACTIVE"
     });
   }
-
-  /**
-   * 現在のグループを離脱
-   */
-  leaveGroup(){
-    DataManager.setClient({"status":"IDLING"});
-    DataManager.setGroup({});
-  }
-
+  
   /**
    * グループに参加する
    * @param {Number} id 参加するグループID
@@ -126,16 +118,14 @@ module.exports = class SystemManager{
   disconnect(){
     DataManager.getConnections()
       .forEach(connection=>{
-        connection.rtc.send(
-          connection.channel,
-          Builder("DISCONNECT")
-        );
+        connection.rtc.send(Builder("DISCONNECT"));
         connection.rtc.close();
       });
 
     DataManager.deleteConnections();
     DataManager.deleteMessages();
-    this.leaveGroup();
+    DataManager.setClient({"status":"IDLING"});
+    DataManager.setGroup({});
   }
 
   /**
@@ -145,10 +135,7 @@ module.exports = class SystemManager{
   send(data){
     DataManager.getConnections()
       .forEach(connection=>{
-        connection.rtc.send(
-          connection.channel,
-          Builder("SEND_MESSAGE",data)
-        );
+        connection.rtc.send(Builder("SEND_MESSAGE",data));
       });
   }
 }

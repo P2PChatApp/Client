@@ -8,7 +8,11 @@ module.exports = class RTCClient{
   constructor(){
     this.rtc = new RTCPeerConnection({
       iceServers: [
-        { urls: "stun:stun.l.google.com:19302" },
+        {urls: "stun:stun.l.google.com:19302"},
+        {urls: "stun:stun1.l.google.com:19302"},
+        {urls: "stun:stun2.l.google.com:19302"},
+        {urls: "stun:stun3.l.google.com:19302"},
+        {urls: "stun:stun4.l.google.com:19302"}
       ]
     });
   }
@@ -18,10 +22,10 @@ module.exports = class RTCClient{
    * @returns {RTCSessionDescriptionInit} オファーデータ
    */
   async createOffer(){
+    await this.getCandidates();
+
     const offer = await this.rtc.createOffer();
     await this.rtc.setLocalDescription(offer);
-
-    await this.getCandidates();
     return this.rtc.localDescription;
   }
 
@@ -41,11 +45,19 @@ module.exports = class RTCClient{
   }
 
   /**
+   * アンサーをセット
+   * @param {RTCSessionDescriptionInit} answer アンサーデータ
+   */
+  async setAnswer(answer){
+    await this.rtc.setRemoteDescription(answer);
+  }
+
+  /**
    * 経路が全て見つかるまで待機する
    */
   async getCandidates(){
     await new Promise(resolve=>{
-      this.rtc.addEventListener("icecandidate",async(event)=>{
+      this.rtc.addEventListener("icecandidate",(event)=>{
         if(event.candidate === null) resolve();
       });
     })
@@ -54,24 +66,23 @@ module.exports = class RTCClient{
   /**
    * データチャンネルを作成
    * @param {String} name データチャンネル名
-   * @returns {RTCDataChannel} データチャンネル
    */
   async createChannel(name){
-    const channel = this.rtc.createDataChannel(name);
-    return await new Promise(resolve=>{
-      channel.addEventListener("open",()=>{
-        resolve(channel);
+    this.channel = this.rtc.createDataChannel(name);
+    await new Promise(resolve=>{
+      this.channel.addEventListener("open",()=>{
+        resolve();
       });
     });
   }
 
   /**
    * メッセージを送信
-   * @param {RTCDataChannel} channel データチャンネル
    * @param {Object} data 通信データオブジェクト 
    */
-  send(channel,data){
-    channel.send(JSON.stringify(data));
+  send(data){
+    if(!this.channel) return;
+    this.channel.send(JSON.stringify(data));
   }
 
   /**
