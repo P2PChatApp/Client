@@ -64,7 +64,7 @@ module.exports = class RTCClient{
       this.rtc.addEventListener("icecandidate",(event)=>{
         if(event.candidate === null) resolve();
       });
-    })
+    });
   }
 
   /**
