@@ -15,6 +15,10 @@ module.exports = class RTCClient{
         {urls: "stun:stun4.l.google.com:19302"}
       ]
     });
+
+    this.rtc.addEventListener("datachannel",(event)=>{
+      this.channel = event.channel;
+    });
   }
 
   /**
@@ -68,7 +72,12 @@ module.exports = class RTCClient{
    * @param {String} name データチャンネル名
    */
   async createChannel(name){
-    this.channel = this.rtc.createDataChannel(name);
+    if(this.channel) return;
+
+    this.channel = this.rtc.createDataChannel(name,{
+      ordered: false
+    });
+    
     await new Promise(resolve=>{
       this.channel.addEventListener("open",()=>{
         resolve();
