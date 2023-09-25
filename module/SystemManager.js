@@ -72,9 +72,9 @@ module.exports = class SystemManager{
   }
 
   /**
-   * 現在のグループを削除
+   * 現在のグループを離脱
    */
-  deleteGroup(){
+  leaveGroup(){
     DataManager.setClient({"status":"IDLING"});
     DataManager.setGroup({});
   }
@@ -135,7 +135,7 @@ module.exports = class SystemManager{
 
     DataManager.deleteConnections();
     DataManager.deleteMessages();
-    DataManager.setClient({"status":"IDLING"});
+    this.leaveGroup();
   }
 
   /**
