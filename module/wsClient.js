@@ -1,5 +1,6 @@
 const RTCClient = require("./RTCClient");
 const RTCManager = require("./RTCManager");
+const DataManager = require("./DataManager");
 const Builder = require("../lib/Builder");
 const parse = require("../lib/parse");
 
@@ -18,7 +19,10 @@ module.exports = class WSClient{
     this.ws.addEventListener("open",()=>{
       console.log("WebSocket Open");
 
-      this.ws.send(Builder("AUTH"));
+      this.ws.send(Builder(
+        "AUTH",
+        DataManager.getClient().id
+      ));
     });
 
     this.ws.addEventListener("close",(code,reason)=>{
