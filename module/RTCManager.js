@@ -10,10 +10,10 @@ module.exports = class RTCManager{
    * P2P通信の開始
    * @param {String} clientId 接続先のClientID
    */
-  connect(clientId){
+  async connect(clientId){
     const connection = DataManager.getConnection(clientId);
     DataManager.setConnection(clientId,{
-      "channel": connection.rtc.createChannel("chat")
+      "channel": await connection.rtc.createChannel("chat")
     });
 
     DataManager.setGroup({"status": "ACTIVE"});

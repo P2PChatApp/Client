@@ -101,7 +101,7 @@ module.exports = class SystemManager{
   /**
    * 設定されているグループに接続
    */
-  connect(){
+  async connect(){
     const peers = DataManager.getPeers()
       .filter(peer=>peer.group?.id === DataManager.getGroup().id);
 
@@ -114,7 +114,7 @@ module.exports = class SystemManager{
   
       this.wsClient.send(Builder(
         "OFFER_REQUEST",
-        connection.rtc.createOffer(),
+        await connection.rtc.createOffer(),
         peer.client.id
       ));
     });
