@@ -1,10 +1,7 @@
-const WSClient = require("./WSClient");
-const RTCClient = require("./RTCClient");
-const DataManager = require("./DataManager");
-
-const DataChecker = require("../lib/DataChecker");
-const Builder = require("../lib/Builder");
-const parse = require("../lib/parse");
+const WSClient = require("./module/WSClient");
+const RTCClient = require("./module/RTCClient");
+const DataManager = require("./module/DataManager");
+const Builder = require("./lib/Builder");
 /**
  * システム管理
  */
@@ -93,11 +90,11 @@ module.exports = class SystemManager{
   /**
    * 設定されているグループに接続
    */
-  async connect(){
+  connect(){
     const peers = DataManager.getPeers()
       .filter(peer=>peer.group?.id === DataManager.getGroup().id);
 
-    peers.forEach(peer=>{
+    peers.forEach(async(peer)=>{
       const connection = DataManager.setConnection(peer.client.id,{
         "client": peer.client,
         "group": peer.group,
