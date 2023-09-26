@@ -48,7 +48,19 @@ module.exports = class SystemManager{
   getGroups(){
     return DataManager.getPeers()
       .map(peer=>peer.group)
-      .filter(group=>Object.keys(group).length !== 0);
+      .filter(group=>Object.keys(group).length !== 0)
+      .filter((group,i,array)=>array.indexOf(group) === i);
+  }
+
+  /**
+   * 接続されているメンバーを取得
+   * @returns {Array} 接続されているメンバーのクライアントデータ
+   */
+  getMembers(){
+    if(DataManager.getClient().status !== "CONNECTIONG") return;
+
+    return DataManager.getConnections()
+      .map(connection=>connection.client);
   }
 
   /**
@@ -77,7 +89,7 @@ module.exports = class SystemManager{
     const group = this.getGroups()
       .find(group=>group.id === id);
 
-    if(!group) return false;
+    if(!group) return;
 
     return DataManager.setGroup({
       "name": group.name,
@@ -133,5 +145,20 @@ module.exports = class SystemManager{
       .forEach(connection=>{
         connection.rtc.send(Builder("SEND_MESSAGE",data));
       });
+  }
+
+  data = {
+    client:()=>{
+      return DataManager.getClient();
+    },
+    group:()=>{
+      return DataManager.getGroup();
+    },
+    peers:()=>{
+      return DataManager.getPeers().length;
+    },
+    message:()=>{
+      return DataManager.getMessage();
+    }
   }
 }
