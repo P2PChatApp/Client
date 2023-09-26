@@ -115,7 +115,6 @@ module.exports = class SystemManager{
   disconnect(){
     DataManager.getConnections()
       .forEach(connection=>{
-        connection.rtc.send(Builder("DISCONNECT"));
         connection.rtc.close();
       });
 

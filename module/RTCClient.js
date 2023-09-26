@@ -98,6 +98,7 @@ module.exports = class RTCClient{
    * 接続を終了します
    */
   close(){
+    this.channel.close();
     this.rtc.close();
   }
 }
