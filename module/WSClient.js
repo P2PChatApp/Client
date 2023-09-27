@@ -39,15 +39,17 @@ module.exports = class WSClient{
       console.log(`WebSocket Data: ${data}`);
 
       if(data.type === "OFFER_REQUEST"){
-        DataManager.setConnection(data.client.id,{
+        const connection = DataManager.setConnection(data.client.id,{
           "client": data.client,
           "group": data.group,
           "rtc": new RTCClient()
         });
   
+        await connection.rtc.setOffer(data.data);
+
         this.ws.send(Builder(
           "ANSWER_REQUEST",
-          await DataManager.getConnection(data.client.id).rtc.createAnswer(data.data)
+          await connection.rtc.createAnswer()
         ));
       }else if(data.type === "ANSWER_REQUEST"){
         await DataManager.getConnection(data.client.id).rtc.setAnswer(data.data);

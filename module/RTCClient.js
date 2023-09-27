@@ -22,35 +22,42 @@ module.exports = class RTCClient{
   }
 
   /**
-   * 経路情報を取得しオファーを作成
-   * @returns {RTCSessionDescriptionInit} オファーデータ
+   * オファーを作成
+   * @returns {RTCSessionDescription} オファーデータ
    */
   async createOffer(){
-    await this.getCandidates();
-
     const offer = await this.rtc.createOffer();
     await this.rtc.setLocalDescription(offer);
+
+    await this.getCandidates();
+
     return this.rtc.localDescription;
   }
 
   /**
-   * 経路情報を取得しアンサーを作成
-   * @param {RTCSessionDescriptionInit} offer 相手のオファーデータ
-   * @returns {RTCSessionDescriptionInit} アンサーデータ
+   * アンサーを作成
+   * @returns {RTCSessionDescription} アンサーデータ
    */
-  async createAnswer(offer){
-    await this.rtc.setRemoteDescription(offer);
-
-    await this.getCandidates();
-
+  async createAnswer(){
     const answer = await this.rtc.createAnswer();
     await this.rtc.setLocalDescription(answer);
+
+    await this.getCandidates();
+    
     return this.rtc.localDescription;
+  }
+
+  /**
+   * オファーをセット
+   * @param {RTCSessionDescription} offer オファーデータ
+   */
+  async setOffer(offer){
+    await this.rtc.setRemoteDescription(offer);
   }
 
   /**
    * アンサーをセット
-   * @param {RTCSessionDescriptionInit} answer アンサーデータ
+   * @param {RTCSessionDescription} answer アンサーデータ
    */
   async setAnswer(answer){
     await this.rtc.setRemoteDescription(answer);

@@ -91,6 +91,8 @@ module.exports = class SystemManager{
 
     if(!group) return;
 
+    DataManager.setClient({"status":"WAITING"});
+
     return DataManager.setGroup({
       "name": group.name,
       "id": group.id,
