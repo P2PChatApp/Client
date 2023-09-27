@@ -28,7 +28,7 @@ module.exports = class SystemManager{
   }
 
   /**
-   * 9桁の数字のIDを生成します
+   * ランダムなIDを生成します
    * @param {Number} length 生成する長さ 
    * @returns {String} 生成したID
    */
