@@ -57,8 +57,6 @@ module.exports = class SystemManager{
    * @returns {Array} 接続されているメンバーのクライアントデータ
    */
   getMembers(){
-    if(DataManager.getClient().status !== "CONNECTIONG") return;
-
     return DataManager.getConnections()
       .map(connection=>connection.client);
   }
@@ -102,6 +100,14 @@ module.exports = class SystemManager{
   }
 
   /**
+   * グループから離脱
+   */
+  leaveGroup(){
+    DataManager.setClient({"status":"IDLING"});
+    DataManager.setGroup({});
+  }
+
+  /**
    * 設定されているグループに接続
    */
   connect(){
@@ -134,8 +140,6 @@ module.exports = class SystemManager{
 
     DataManager.deleteConnections();
     DataManager.deleteMessages();
-    DataManager.setClient({"status":"IDLING"});
-    DataManager.setGroup({});
   }
 
   /**
