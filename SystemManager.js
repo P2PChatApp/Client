@@ -42,6 +42,17 @@ module.exports = class SystemManager{
   }
 
   /**
+   * ユーザー名を変更します
+   * @param {String} name 変更する名前 
+   * @returns 変更後のクライアントデータ
+   */
+  setName(name){
+    return DataManager.setClient({
+      "name": name
+    });
+  }
+
+  /**
    * グループ一覧の取得
    * @returns {Array} 存在するグループの配列
    */
