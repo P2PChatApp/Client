@@ -2,6 +2,7 @@ const WSClient = require("./module/WSClient");
 const RTCClient = require("./module/RTCClient");
 const DataManager = require("./module/DataManager");
 const Builder = require("./lib/Builder");
+const hash = require("./lib/hash");
 /**
  * システム管理
  */
@@ -76,17 +77,21 @@ module.exports = class SystemManager{
    * グループの作成
    * @param {String} name グループ名 
    * @param {Boolean} isPublic チャットを公開するかどうか 
-   * @returns {Object} グループデータ
+   * @returns {String} グループID
    */
   createGroup(name,isPublic){
     DataManager.setClient({"status":"WAITING"});
 
-    return DataManager.setGroup({
+    const id = this.createId(8);
+
+    DataManager.setGroup({
       "name": name,
-      "id": this.createId(8),
+      "id": isPublic ? id : await hash(id),
       "isPublic": isPublic,
       "status": "INACTIVE"
     });
+
+    return id;
   }
   
   /**
@@ -96,7 +101,13 @@ module.exports = class SystemManager{
    */
   joinGroup(id){
     const group = this.getGroups()
-      .find(group=>group.id === id);
+      .find(group=>{
+        if(group.isPublic){
+          return group.id === id;
+        }else{
+          return group.id === await hash(id);
+        }
+      });
 
     if(!group) return;
 
