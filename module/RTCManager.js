@@ -11,7 +11,6 @@ module.exports = class RTCManager{
    */
   async connect(clientId){
     const connection = DataManager.getConnection(clientId);
-    await connection.rtc.createChannel("chat");
 
     DataManager.setGroup({"status": "ACTIVE"});
 

@@ -142,6 +142,8 @@ module.exports = class SystemManager{
         "group": peer.group,
         "rtc": new RTCClient()
       });
+
+      await connection.rtc.createChannel("chat");
   
       this.WSClient.send(Builder(
         "OFFER_REQUEST",
