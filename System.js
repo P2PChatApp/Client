@@ -18,11 +18,6 @@ module.exports = class System{
     },3000);
   }
 
-  /**
-   * ランダムなIDを生成します
-   * @param {Number} length 生成する長さ
-   * @returns {String} 生成したID
-   */
   createId(length){
     const str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let id = "";
@@ -32,10 +27,6 @@ module.exports = class System{
     return id;
   }
 
-  /**
-   * グループ一覧の取得
-   * @returns {Array} 存在するグループの配列
-   */
   getGroups(){
     return this.peers.gets()
       .map(peer=>peer.group)
@@ -43,12 +34,6 @@ module.exports = class System{
       .filter((group,i,array)=>array.indexOf(group) === i);
   }
 
-  /**
-   * グループの作成
-   * @param {String} name グループ名
-   * @param {Boolean} isPublic チャットを公開するかどうか
-   * @returns {String} グループID
-   */
   async createGroup(name,isPublic){
     const id = this.createId(8);
 
@@ -61,11 +46,6 @@ module.exports = class System{
     return id;
   }
 
-  /**
-   * グループに参加する
-   * @param {Number} id 参加するグループID
-   * @returns 成功したら参加したグループデータ
-   */
   joinGroup(id){
     const group = this.getGroups()
       .find(async(group)=>{
