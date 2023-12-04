@@ -49,7 +49,7 @@ module.exports = class System{
    * @param {Boolean} isPublic チャットを公開するかどうか
    * @returns {String} グループID
    */
-  createGroup(name,isPublic){
+  async createGroup(name,isPublic){
     const id = this.createId(8);
 
     this.client.group = {
@@ -68,7 +68,7 @@ module.exports = class System{
    */
   joinGroup(id){
     const group = this.getGroups()
-      .find(group=>{
+      .find(async(group)=>{
         if(group.isPublic){
           return group.id === id;
         }else{

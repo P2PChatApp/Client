@@ -29,7 +29,7 @@ module.exports = class Peers extends EventTarget{
 
   remove(id){
     this.dispatchEvent(new CustomEvent("remove",{
-      "peer": data
+      "peer": this.get(id)
     }));
 
     delete this.list[id];
