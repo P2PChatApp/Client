@@ -1,10 +1,4 @@
-/**
- * WebRTC Client
- */
-module.exports = class RTCClient{
-  /**
-   * RTCPeerConnection作成
-   */
+module.exports = class WebRTCManager{
   constructor(){
     this.rtc = new RTCPeerConnection({
       iceServers: [
@@ -17,6 +11,8 @@ module.exports = class RTCClient{
     });
 
     this.rtc.addEventListener("datachannel",(event)=>{
+      if(this.channel) return;
+
       this.channel = event.channel;
     });
   }
@@ -43,7 +39,7 @@ module.exports = class RTCClient{
     await this.rtc.setLocalDescription(answer);
 
     await this.getCandidates();
-    
+
     return this.rtc.localDescription;
   }
 
@@ -88,7 +84,7 @@ module.exports = class RTCClient{
 
   /**
    * メッセージを送信
-   * @param {Object} data 通信データオブジェクト 
+   * @param {Object} data 通信データオブジェクト
    */
   send(data){
     if(!this.channel) return;
