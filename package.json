@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "./node_modules/.bin/eslint ./",
-    "build": "esbuild --bundle --format=cjs --platform=browser --target=es2020 --outfile=./docs/Client.js ./SystemManager.js"
+    "build": "esbuild --bundle --format=cjs --minify --platform=browser --target=es2020 --outfile=Client.js ./System.js"
   },
   "repository": {
     "type": "git",
