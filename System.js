@@ -5,8 +5,10 @@ const hash = require("./lib/hash");
 
 module.exports = class System extends EventTarget{
   constructor(){
+    super();
+
     this.client = new Client(this.createId(10),this.createId(6));
-    this.peers = new Peers();
+    this.peers = new Peers(this.client);
     this.ws = new WebSocketManager(this.client,this.peers);
 
     setInterval(()=>{
@@ -72,7 +74,7 @@ module.exports = class System extends EventTarget{
   }
 
   connect(){
-    if(!this.client.group.id) return;
+    if(Object.keys(group).length === 0) return;
 
     this.peers.gets()
       .filter(peer=>peer.group?.id === this.client.group.id)
