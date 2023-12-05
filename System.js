@@ -74,7 +74,7 @@ module.exports = class System extends EventTarget{
   }
 
   connect(){
-    if(Object.keys(group).length === 0) return;
+    if(Object.keys(this.client.group).length === 0) return;
 
     this.peers.gets()
       .filter(peer=>peer.group?.id === this.client.group.id)
