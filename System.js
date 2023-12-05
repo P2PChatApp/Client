@@ -3,7 +3,7 @@ const Client = require("./module/Client");
 const Peers = require("./module/Peers");
 const hash = require("./lib/hash");
 
-module.exports = class System{
+module.exports = class System extends EventTarget{
   constructor(){
     this.client = new Client(this.createId(10),this.createId(6));
     this.peers = new Peers();
@@ -15,6 +15,8 @@ module.exports = class System{
       }));
 
       this.peers.filter();
+
+      this.dispatchEvent(new CustomEvent("update"));
     },3000);
   }
 
