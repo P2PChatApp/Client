@@ -33,11 +33,12 @@ module.exports = class WebSocketManager extends WebSocket{
     this.addEventListener("message",async(_data)=>{
       const data = parse(_data.toString());
       if(!DataChecker(data)) return;
-      
+
       console.log(`WebSocket Data: ${data}`);
 
       if(data.type === "OFFER_REQUEST"){
         const peer = this.peers.get(data.client.id);
+        if(!peer) return;
 
         await peer.setOffer(data.data);
 
@@ -48,6 +49,7 @@ module.exports = class WebSocketManager extends WebSocket{
         }));
       }else if(data.type === "ANSWER_REQUEST"){
         const peer = this.peers.get(data.client.id);
+        if(!peer) return;
 
         await peer.setAnswer(data.data);
 
@@ -61,7 +63,7 @@ module.exports = class WebSocketManager extends WebSocket{
         await this.peers.connect(data.client.id);
       }else if(data.type === "DATA_REQUEST"){
         this.send(this.client.packet({
-          "type":"DATA_RESPONSE",
+          "type": "DATA_RESPONSE",
           "address": data.client.id
         }));
       }else if(data.type === "DATA_RESPONSE"){

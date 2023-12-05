@@ -8,7 +8,6 @@ module.exports = class Peers extends EventTarget{
 
     this.client = client;
     this.list = {};
-    this.isConnected = false;
   }
 
   gets(){
@@ -49,7 +48,7 @@ module.exports = class Peers extends EventTarget{
     peer.channel.addEventListener("open",()=>{
       console.log("WebRTC Open");
 
-      this.isConnected = true;
+      peer.isConnected = true;
       this.dispatchEvent(new CustomEvent("open",{
         "peer": peer
       }));
@@ -90,20 +89,20 @@ module.exports = class Peers extends EventTarget{
   }
 
   disconnect(){
-    if(!this.isConnected) return;
-    this.isConnected = false;
-
-    Object.values(this.list)
+    this.gets()
       .forEach(peer=>{
+        if(!peer.isConnected) return;
+        peer.isConnected = false;
+
         peer.close();
       });
   }
 
   send(data){
-    if(!this.isConnected) return;
-
-    Object.values(this.list)
+    this.gets()
       .forEach(peer=>{
+        if(!peer.isConnected) return;
+
         peer.send(this.client.packet({
           "type": "SEND_MESSAGE",
           "data": data

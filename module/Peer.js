@@ -8,5 +8,7 @@ module.exports = class Peer extends WebRTCManager{
     this.id = data.client.id;
     this.group = data.group;
     this.time = data.time;
+
+    this.isConnected = false;
   }
 }
