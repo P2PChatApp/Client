@@ -1,6 +1,5 @@
-class WebSocketManager extends WebSocket{
+class WebSocketManager{
   constructor(client,peers){
-    super();
 
     this.client = client;
     this.peers = peers;
@@ -9,9 +8,9 @@ class WebSocketManager extends WebSocket{
   }
 
   connect(){
-    super("ws://ws.gakerbot.net");
+    this.ws = new WebSocket("ws://ws.gakerbot.net");
 
-    this.addEventListener("open",()=>{
+    this.ws.addEventListener("open",()=>{
       console.log("WebSocket Open");
 
       this.send(this.client.packet({
@@ -19,7 +18,7 @@ class WebSocketManager extends WebSocket{
       }));
     });
 
-    this.addEventListener("close",(code,reason)=>{
+    this.ws.addEventListener("close",(code,reason)=>{
       console.log(`WebSocket Close: ${code} ${reason}`);
 
       setTimeout(()=>{
@@ -27,11 +26,11 @@ class WebSocketManager extends WebSocket{
       },5000);
     });
 
-    this.addEventListener("error",(error)=>{
+    this.ws.addEventListener("error",(error)=>{
       console.log(`WebSocket Error: ${error}`);
     });
 
-    this.addEventListener("message",async(_data)=>{
+    this.ws.addEventListener("message",async(_data)=>{
       const data = parse(_data.toString());
       if(!DataChecker(data)) return;
 
@@ -71,5 +70,9 @@ class WebSocketManager extends WebSocket{
         this.peers.add(data);
       }
     });
+  }
+
+  send(data){
+    this.ws.send(JSON.stringify(data));
   }
 }

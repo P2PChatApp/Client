@@ -6,7 +6,7 @@ class Client{
   }
 
   packet(data){
-    return JSON.stringify({
+    return {
       "type": data.type,
       "address": data.address,
       "client":{
@@ -16,6 +16,6 @@ class Client{
       },
       "group": this.group,
       "data": data.data
-    });
+    };
   }
 }
