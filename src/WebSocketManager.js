@@ -1,5 +1,7 @@
 class WebSocketManager extends WebSocket{
   constructor(client,peers){
+    super();
+
     this.client = client;
     this.peers = peers;
 
