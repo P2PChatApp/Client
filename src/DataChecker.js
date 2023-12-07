@@ -1,4 +1,4 @@
-function DataCheker(data){
+function DataChecker(data){
   if(
     !data.type||
     !data.client?.id||
