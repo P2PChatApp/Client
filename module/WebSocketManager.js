@@ -3,8 +3,6 @@ const DataChecker = require("../lib/DataChecker");
 
 module.exports = class WebSocketManager extends WebSocket{
   constructor(client,peers){
-    super("ws://ws.gakerbot.net");
-
     this.client = client;
     this.peers = peers;
 
@@ -12,10 +10,14 @@ module.exports = class WebSocketManager extends WebSocket{
   }
 
   connect(){
+    super("ws://ws.gakerbot.net");
+
     this.addEventListener("open",()=>{
       console.log("WebSocket Open");
 
-      this.send(this.client.packet("AUTH",this.client.id));
+      this.send(this.client.packet({
+        "type": "AUTH"
+      }));
     });
 
     this.addEventListener("close",(code,reason)=>{
