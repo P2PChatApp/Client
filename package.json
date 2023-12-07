@@ -4,7 +4,7 @@
   "description": "P2PWebClient",
   "main": "index.js",
   "scripts": {
-    "lint": "./node_modules/.bin/eslint ./",
+    "lint": "./node_modules/.bin/eslint ./dist/Client.js",
     "build": "esbuild --bundle --sourcemap --format=cjs --minify --platform=browser --target=es2020 --outfile=./dist/client.js ./System.js"
   },
   "repository": {

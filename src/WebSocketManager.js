@@ -1,7 +1,4 @@
-const parse = require("../lib/parse");
-const DataChecker = require("../lib/DataChecker");
-
-module.exports = class WebSocketManager extends WebSocket{
+class WebSocketManager extends WebSocket{
   constructor(client,peers){
     this.client = client;
     this.peers = peers;
