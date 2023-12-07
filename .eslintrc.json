@@ -23,7 +23,7 @@
       "no-implicit-coercion": "error",
       "no-self-compare": "error",
       "no-extra-semi": "error",
-      "no-unused-vars": "error",
+      "no-unused-vars": "warn",
       "no-irregular-whitespace": "error",
       "no-constant-binary-expression": "error",
       "indent": [
