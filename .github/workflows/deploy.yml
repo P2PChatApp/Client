@@ -22,6 +22,7 @@ jobs:
       - run: cat src/System.js src/Client.js src/Peer.js src/Peers.js src/WebRTCManager.js src/WebSocketManager.js src/hash.js src/parse.js src/DataChecker.js > ./dist/Client.js
       - run: npm ci
       - run: npm run lint
+      - run: npm run build
       - uses: actions/configure-pages@v3
       - uses: actions/upload-pages-artifact@v2
         with:

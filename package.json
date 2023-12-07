@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "./node_modules/.bin/eslint ./dist/Client.js",
-    "build": "esbuild --bundle --sourcemap --format=cjs --minify --platform=browser --target=es2020 --outfile=./dist/client.js ./System.js"
+    "build": "terser ./dist/Client.js --compress --mangle --source-map --output ./dist/Client.js"
   },
   "repository": {
     "type": "git",
@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/P2PChatApp/Client#readme",
   "devDependencies": {
-    "esbuild": "^0.19.2",
-    "eslint": "^8.47.0"
+    "eslint": "^8.47.0",
+    "terser": "^5.25.0"
   }
 }
