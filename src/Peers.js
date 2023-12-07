@@ -1,8 +1,4 @@
-const Peer = require("./Peer");
-const parse = require("../lib/parse");
-const DataChecker = require("../lib/DataChecker");
-
-module.exports = class Peers extends EventTarget{
+class Peers extends EventTarget{
   constructor(client){
     super();
 

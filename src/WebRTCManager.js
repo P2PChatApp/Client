@@ -1,4 +1,4 @@
-module.exports = class WebRTCManager{
+class WebRTCManager{
   constructor(){
     this.rtc = new RTCPeerConnection({
       iceServers: [

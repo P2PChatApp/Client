@@ -1,9 +1,4 @@
-/**
- * データの整合性のチェック
- * @param {Object} data 通信データオブジェクト
- * @returns {Boolean} データが欠損していたらFalse
- */
-module.exports = (data)=>{
+function DataCheker(data){
   if(
     !data.type||
     !data.client?.id||

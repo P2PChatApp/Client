@@ -1,9 +1,4 @@
-const WebSocketManager = require("./module/WebSocketManager");
-const Client = require("./module/Client");
-const Peers = require("./module/Peers");
-const hash = require("./lib/hash");
-
-module.exports = class System extends EventTarget{
+class System extends EventTarget{
   constructor(){
     super();
 

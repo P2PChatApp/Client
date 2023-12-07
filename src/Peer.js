@@ -1,6 +1,4 @@
-const WebRTCManager = require("./WebRTCManager");
-
-module.exports = class Peer extends WebRTCManager{
+class Peer extends WebRTCManager{
   constructor(data){
     super();
 
