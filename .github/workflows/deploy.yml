@@ -18,6 +18,7 @@ jobs:
         with:
           node-version: 16.x
           cache: "npm"
+      - run: mkdir dist
       - run: cat src/System.js src/Client.js src/Peer.js src/Peers.js src/WebRTCManager.js src/WebSocketManager.js src/hash.js src/parse.js src/DataChecker.js > ./dist/Client.js
       - run: npm ci
       - run: npm run lint
