@@ -6,7 +6,7 @@ class Peers extends EventTarget{
     this.list = {};
   }
 
-  gets(){
+  all(){
     return Object.values(this.list);
   }
 
@@ -85,7 +85,7 @@ class Peers extends EventTarget{
   }
 
   disconnect(){
-    this.gets()
+    this.all()
       .forEach(peer=>{
         if(!peer.isConnected) return;
         peer.isConnected = false;
@@ -95,7 +95,7 @@ class Peers extends EventTarget{
   }
 
   send(data){
-    this.gets()
+    this.all()
       .forEach(peer=>{
         if(!peer.isConnected) return;
 
