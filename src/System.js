@@ -27,7 +27,7 @@ class System extends EventTarget{
   }
 
   getGroups(){
-    return this.peers.gets()
+    return this.peers.all()
       .map(peer=>peer.group)
       .filter(group=>Object.keys(group).length !== 0)
       .filter((group,i,array)=>array.indexOf(group) === i);
@@ -71,7 +71,7 @@ class System extends EventTarget{
   connect(){
     if(Object.keys(this.client.group).length === 0) return;
 
-    this.peers.gets()
+    this.peers.all()
       .filter(peer=>peer.group?.id === this.client.group.id)
       .forEach(async(peer)=>{
         await peer.createChannel("chat");
