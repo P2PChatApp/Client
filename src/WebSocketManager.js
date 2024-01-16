@@ -8,7 +8,7 @@ class WebSocketManager{
   }
 
   connect(){
-    this.ws = new WebSocket("wss://ws.gakerbot.net");
+    this.ws = new WebSocket("wss://ws.gakerbot.net:3004");
 
     this.ws.addEventListener("open",()=>{
       console.log("WebSocket Open");
@@ -18,8 +18,8 @@ class WebSocketManager{
       }));
     });
 
-    this.ws.addEventListener("close",(code,reason)=>{
-      console.log(`WebSocket Close: ${code} ${reason}`);
+    this.ws.addEventListener("close",(event)=>{
+      console.log(`WebSocket Close: ${JSON.stringify(event)}`);
 
       setTimeout(()=>{
         this.connect();
@@ -27,7 +27,7 @@ class WebSocketManager{
     });
 
     this.ws.addEventListener("error",(error)=>{
-      console.log(`WebSocket Error: ${error}`);
+      console.log(`WebSocket Error: ${JSON.stringify(error)}`);
     });
 
     this.ws.addEventListener("message",async(_data)=>{
