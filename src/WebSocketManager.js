@@ -8,7 +8,7 @@ class WebSocketManager{
   }
 
   connect(){
-    this.ws = new WebSocket("wss://ws.gakerbot.net:3004");
+    this.ws = new WebSocket("ws://ws.gakerbot.net:3004");
 
     this.ws.addEventListener("open",()=>{
       console.log("WebSocket Open");
