@@ -73,7 +73,7 @@ class WebSocketManager{
   }
 
   send(data){
-    if(ws.readyState !== 1) return;
+    if(this.ws.readyState !== 1) return;
 
     this.ws.send(JSON.stringify(data));
   }
