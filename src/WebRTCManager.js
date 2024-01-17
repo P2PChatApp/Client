@@ -60,7 +60,8 @@ class WebRTCManager{
   }
 
   send(data){
-    if(!this.channel) return;
+    if(!this.channel||this.rtc.connectionState !== "connected") return;
+    
     this.channel.send(JSON.stringify(data));
   }
 
