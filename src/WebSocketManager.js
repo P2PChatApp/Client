@@ -18,8 +18,8 @@ class WebSocketManager{
       }));
     });
 
-    this.ws.addEventListener("close",(event)=>{
-      console.log(`WebSocket Close: ${JSON.stringify(event)}`);
+    this.ws.addEventListener("close",()=>{
+      console.log("WebSocket Close");
 
       setTimeout(()=>{
         this.connect();

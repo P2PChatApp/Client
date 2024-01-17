@@ -55,7 +55,7 @@ class System extends EventTarget{
         }
       });
 
-    if(!group) return;
+    if(!group) throw new Error("指定したグループが存在しません");
 
     this.client.group = {
       "name": group.name,
@@ -69,7 +69,7 @@ class System extends EventTarget{
   }
 
   connect(){
-    if(Object.keys(this.client.group).length === 0) return;
+    if(Object.keys(this.client.group).length === 0) throw new Error("グループに参加していません");
 
     this.peers.all()
       .filter(peer=>peer.group?.id === this.client.group.id)
