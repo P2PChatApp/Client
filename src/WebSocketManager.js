@@ -1,14 +1,15 @@
 class WebSocketManager{
-  constructor(client,peers){
+  constructor(client,peers,url){
 
     this.client = client;
     this.peers = peers;
+    this.url = url;
 
     this.connect();
   }
 
   connect(){
-    this.ws = new WebSocket("wss://ws.gakerbot.net:3004");
+    this.ws = new WebSocket(this.url);
 
     this.ws.addEventListener("open",()=>{
       console.log("WebSocket Open");
