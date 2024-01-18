@@ -73,7 +73,7 @@ class System extends EventTarget{
     if(Object.keys(this.client.group).length === 0) throw new Error("グループに参加していません");
 
     this.peers.all()
-      .filter(peer=>peer.group?.id === this.client.group.id)
+      .filter(peer=>peer.group.id === this.client.group.id)
       .forEach(async(peer)=>{
         peer.createChannel("chat");
 
