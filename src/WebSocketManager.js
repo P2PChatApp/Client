@@ -28,12 +28,11 @@ class WebSocketManager{
     });
 
     this.ws.addEventListener("error",(error)=>{
-      console.log(`WebSocket Error: ${JSON.stringify(error)}`);
+      console.log("WebSocket Error");
     });
 
     this.ws.addEventListener("message",async(event)=>{
       const data = parse(event.data.toString());
-
       if(!DataChecker(data)) return;
 
       console.log(`WebSocket Data: ${JSON.stringify(data)}`);
