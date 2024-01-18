@@ -31,10 +31,12 @@ class WebSocketManager{
       console.log(`WebSocket Error: ${JSON.stringify(error)}`);
     });
 
-    this.ws.addEventListener("message",async(_data)=>{
-      const data = parse(_data.toString());
-      console.log(`WebSocket Data: ${data}`);
+    this.ws.addEventListener("message",async(event)=>{
+      const data = parse(event.data.toString());
+
       if(!DataChecker(data)) return;
+
+      console.log(`WebSocket Data: ${JSON.stringify(data)}`);
 
       if(data.type === "OFFER_REQUEST"){
         const peer = this.peers.get(data.client.id);
