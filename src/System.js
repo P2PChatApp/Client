@@ -34,7 +34,7 @@ class System extends EventTarget{
   }
 
   async createGroup(name,isPublic){
-    const id = this.createId(8);
+    const id = this.createId(6);
 
     this.client.group = {
       "name": name,
