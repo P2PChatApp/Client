@@ -2,7 +2,7 @@ class System extends EventTarget{
   constructor(url){
     super();
 
-    this.client = new Client(this.createId(10),this.createId(6));
+    this.client = new Client(this.createId(8),this.createId(6));
     this.peers = new Peers(this.client);
     this.ws = new WebSocketManager(this.client,this.peers,url);
 
