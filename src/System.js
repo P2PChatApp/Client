@@ -2,7 +2,7 @@ class System extends EventTarget{
   constructor(url){
     super();
 
-    this.client = new Client(this.createId(10),this.createId(6));
+    this.client = new Client(this.createId(8),this.createId(6));
     this.peers = new Peers(this.client);
     this.ws = new WebSocketManager(this.client,this.peers,url);
 
@@ -75,7 +75,7 @@ class System extends EventTarget{
     this.peers.all()
       .filter(peer=>peer.group?.id === this.client.group.id)
       .forEach(async(peer)=>{
-        await peer.createChannel("chat");
+        peer.createChannel("chat");
 
         this.ws.send(this.client.packet({
           "type": "OFFER_REQUEST",

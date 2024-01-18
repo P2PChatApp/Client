@@ -9,12 +9,6 @@ class WebRTCManager{
         {urls: "stun:stun4.l.google.com:19302"}
       ]
     });
-
-    this.rtc.addEventListener("datachannel",(event)=>{
-      if(this.channel) return;
-
-      this.channel = event.channel;
-    });
   }
 
   async createOffer(){
@@ -53,7 +47,7 @@ class WebRTCManager{
     });
   }
 
-  async createChannel(name){
+  createChannel(name){
     this.channel = this.rtc.createDataChannel(name,{
       ordered: false
     });
@@ -61,7 +55,7 @@ class WebRTCManager{
 
   send(data){
     if(!this.channel||this.rtc.connectionState !== "connected") return;
-    
+
     this.channel.send(JSON.stringify(data));
   }
 
