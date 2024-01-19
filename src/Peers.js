@@ -38,7 +38,10 @@ class Peers extends EventTarget{
   filter(){
     this.all()
       .forEach(peer=>{
-        if(new Date() - new Date(peer.time) > 10000) return this.remove(peer.id);
+        if(new Date() - new Date(peer.time) > 10000){
+          this.remove(peer.id);
+          console.log(`Deleted Peer: ${peer.id}`)
+        }
       });
   }
 
