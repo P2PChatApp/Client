@@ -135,8 +135,6 @@ class Peers extends EventTarget{
 
     peer.channel.addEventListener("error",(event)=>{
       console.log(`WebRTC Error: ${event.error}`);
-
-      peer.close();
     });
 
     peer.channel.addEventListener("close",()=>{
