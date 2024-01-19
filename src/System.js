@@ -57,11 +57,7 @@ class System extends EventTarget{
 
     if(!group) throw new Error("指定したグループが存在しません");
 
-    this.client.group = {
-      "name": group.name,
-      "id": id,
-      "isPublic": group.isPublic
-    };
+    this.client.group = group;
   }
 
   leaveGroup(){
