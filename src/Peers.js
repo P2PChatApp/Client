@@ -36,9 +36,9 @@ class Peers extends EventTarget{
   }
 
   filter(){
-    Object.values(this.list)
+    this.all()
       .forEach(peer=>{
-        if(new Date() - new Date(peer.time) < 10000) return this.remove(peer.client.id);
+        if(new Date() - new Date(peer.time) > 10000) return this.remove(peer.id);
       });
   }
 
