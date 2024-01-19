@@ -1,5 +1,9 @@
 class WebRTCManager{
   constructor(){
+    this.reset();
+  }
+
+  reset(){
     this.rtc = new RTCPeerConnection({
       iceServers: [
         {urls: "stun:stun.l.google.com:19302"},
@@ -9,6 +13,8 @@ class WebRTCManager{
         {urls: "stun:stun4.l.google.com:19302"}
       ]
     });
+
+    this.channel = null;
   }
 
   async createOffer(){
@@ -62,5 +68,7 @@ class WebRTCManager{
   close(){
     this.channel.close();
     this.rtc.close();
+
+    this.reset()
   }
 }

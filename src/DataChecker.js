@@ -6,13 +6,19 @@ function DataChecker(data){
     !data.client?.id||
     !data.client?.name||
     !data.client?.time
-  ) return false;
+  ){
+    console.log(`欠損パケット: ${JSON.stringify(data)}`);
+    return false;
+  }
 
   if(Object.keys(data.group).length !== 0){
     if(
       !data.group.id||
       !data.group.name
-    ) return false;
+    ){
+      console.log(`欠損パケット: ${JSON.stringify(data)}`);
+      return false;
+    }
   }
 
   return true;
