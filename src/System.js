@@ -61,8 +61,6 @@ class System extends EventTarget{
   }
 
   leaveGroup(){
-    this.peers.send({},"LEAVE");
-
     this.peers.disconnect();
     this.client.group = {};
   }
