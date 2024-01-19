@@ -40,7 +40,6 @@ class Peers extends EventTarget{
       .forEach(peer=>{
         if(new Date() - new Date(peer.time) > 10000){
           this.remove(peer.id);
-          console.log(`Deleted Peer: ${peer.id}`)
         }
       });
   }
@@ -100,7 +99,6 @@ class Peers extends EventTarget{
 
       if(data.type === "SEND_MESSAGE"){
         this.dispatchEvent(new CustomEvent("message",{
-          "peer": peer,
           "data": data.data
         }));
       }
