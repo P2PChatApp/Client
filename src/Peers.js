@@ -86,16 +86,14 @@ class Peers extends EventTarget{
 
     peer.channel.addEventListener("message",(event)=>{
       const data = parse(event.data.toString());
-      if(!DataChecker(data)) return;
-
-      console.log(`WebRTC Data: ${data}`);
+      console.log(`WebRTC Data: ${JSON.stringify(data)}`);
 
       if(!DataChecker(data)) return;
 
       if(data.type === "SEND_MESSAGE"){
         this.dispatchEvent(new CustomEvent("message",{
           "peer": peer,
-          "data": data
+          "data": data.data
         }));
       }
     });
