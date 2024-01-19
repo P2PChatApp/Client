@@ -30,7 +30,7 @@ class System extends EventTarget{
     return this.peers.all()
       .map(peer=>peer.group)
       .filter(group=>Object.keys(group).length !== 0)
-      .filter((group,i,array)=>array.indexOf(group) === i);
+      .filter((group,i,array)=>array.findIndex(g=>g.id === group.id) === i);
   }
 
   async createGroup(name,isPublic){
