@@ -19,7 +19,12 @@ class Peers extends EventTarget{
       "peer": data
     }));
 
-    this.list[data.client.id] = new Peer(data);
+    const peer = this.get(data.client.id);
+    if(peer){
+      peer.update(data);
+    }else{
+      this.list[data.client.id] = new Peer(data);
+    }
   }
 
   remove(id){
@@ -65,7 +70,6 @@ class Peers extends EventTarget{
   send(data){
     this.all()
       .forEach(peer=>{
-        console.log(peer.isConnected)
         if(!peer.isConnected) return;
 
         peer.send(this.client.packet({

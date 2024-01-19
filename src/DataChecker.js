@@ -4,7 +4,8 @@ function DataChecker(data){
   if(
     !data.type||
     !data.client?.id||
-    !data.client?.name
+    !data.client?.name||
+    !data.client?.time
   ) return false;
 
   if(Object.keys(data.group).length !== 0){
