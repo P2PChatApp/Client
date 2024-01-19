@@ -54,6 +54,8 @@ class WebRTCManager{
   }
 
   send(data){
+    console.log(`チャンネル:${this.channel}`)
+    console.log(`ステータス:${this.rtc.connectionState}`)
     if(!this.channel||this.rtc.connectionState !== "connected") return;
 
     this.channel.send(JSON.stringify(data));
