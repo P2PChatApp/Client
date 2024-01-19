@@ -15,21 +15,31 @@ class Peers extends EventTarget{
   }
 
   add(data){
-    this.dispatchEvent(new CustomEvent("add",{
-      "peer": data
-    }));
-
     const peer = this.get(data.client.id);
     if(peer){
-      peer.updata(data);
+      peer.update(data);
+
+      this.dispatchEvent(new CustomEvent("update",{
+        "detail": {
+          "peer": data
+        }
+      }));
     }else{
       this.list[data.client.id] = new Peer(data);
+
+      this.dispatchEvent(new CustomEvent("add",{
+        "detail": {
+          "peer": this.get(data.client.id)
+        }
+      }));
     }
   }
 
   remove(id){
     this.dispatchEvent(new CustomEvent("remove",{
-      "peer": this.get(id)
+      "detail": {
+        "peer": this.get(id)
+      }
     }));
 
     delete this.list[id];
@@ -69,13 +79,13 @@ class Peers extends EventTarget{
       });
   }
 
-  send(data){
+  send(data,type){
     this.all()
       .forEach(peer=>{
         if(!peer.isConnected) return;
 
         peer.send(this.client.packet({
-          "type": "SEND_MESSAGE",
+          "type": type || "SEND_MESSAGE",
           "data": data
         }));
       });
@@ -87,20 +97,38 @@ class Peers extends EventTarget{
 
       peer.isConnected = true;
       this.dispatchEvent(new CustomEvent("open",{
-        "peer": peer
+        "detail": {
+          "peer": peer
+        }
       }));
+
+      this.send({},"JOIN");
     });
 
     peer.channel.addEventListener("message",(event)=>{
       const data = parse(event.data.toString());
-      console.log(`WebRTC Data: ${JSON.stringify(data)}`);
-
       if(!DataChecker(data)) return;
+
+      console.log(`WebRTC Data: ${JSON.stringify(data)}`);
 
       if(data.type === "SEND_MESSAGE"){
         this.dispatchEvent(new CustomEvent("message",{
-          "peer": peer,
-          "data": data.data
+          "detail":{
+            "peer": peer,
+            "data": data.data
+          }
+        }));
+      }else if(data.type === "JOIN"){
+        this.dispatchEvent(new CustomEvent("join",{
+          "detail":{
+            "peer": peer
+          }
+        }));
+      }else if(data.type === "LEAVE"){
+        this.dispatchEvent(new CustomEvent("leave",{
+          "detail":{
+            "peer": peer
+          }
         }));
       }
     });
@@ -109,10 +137,6 @@ class Peers extends EventTarget{
       console.log(`WebRTC Error: ${event.error}`);
 
       peer.close();
-
-      this.dispatchEvent(new CustomEvent("close",{
-        "peer": peer
-      }));
     });
 
     peer.channel.addEventListener("close",()=>{
@@ -120,8 +144,10 @@ class Peers extends EventTarget{
 
       peer.close();
 
-      this.dispatchEvent(new CustomEvent("close",{
-        "peer": peer
+      this.dispatchEvent(new CustomEvent("leave",{
+        "detail": {
+          "peer": peer
+        }
       }));
     });
   }
