@@ -66,7 +66,7 @@ class Peers extends EventTarget{
     this.all()
       .forEach(peer=>{
         if(!peer.isConnected) return;
-
+        console.log(`${peer.id}に送信しました`)
         peer.send(this.client.packet({
           "type": "SEND_MESSAGE",
           "data": data
