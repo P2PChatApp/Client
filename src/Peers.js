@@ -21,7 +21,7 @@ class Peers extends EventTarget{
 
     const peer = this.get(data.client.id);
     if(peer){
-      peer.update(data);
+      peer.updata(data);
     }else{
       this.list[data.client.id] = new Peer(data);
     }
