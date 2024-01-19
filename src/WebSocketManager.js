@@ -39,7 +39,7 @@ class WebSocketManager{
 
       if(data.type === "OFFER_REQUEST"){
         const peer = this.peers.get(data.client.id);
-        if(!peer||peer.group.id !== this.client.group.id) return;
+        if(!peer) return;
 
         await peer.setOffer(data.data);
 
@@ -50,7 +50,7 @@ class WebSocketManager{
         }));
       }else if(data.type === "ANSWER_REQUEST"){
         const peer = this.peers.get(data.client.id);
-        if(!peer||peer.group.id !== this.client.group.id) return;
+        if(!peer) return;
 
         await peer.setAnswer(data.data);
 
