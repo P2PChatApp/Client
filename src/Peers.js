@@ -99,6 +99,7 @@ class Peers extends EventTarget{
 
       if(data.type === "SEND_MESSAGE"){
         this.dispatchEvent(new CustomEvent("message",{
+          "peer": peer,
           "data": data.data
         }));
       }
