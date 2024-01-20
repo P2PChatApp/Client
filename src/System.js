@@ -4,7 +4,7 @@ class System extends EventTarget{
 
     this.client = new Client({
       name: option.name || this.createId(8),
-      id: option.id || this.createId(6)
+      id: this.createId(6)
     });
     this.peers = new Peers(this.client);
     this.ws = new WebSocketManager(this.client,this.peers,url);
