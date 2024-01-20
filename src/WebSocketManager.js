@@ -61,7 +61,7 @@ class WebSocketManager{
 
         this.peers.connect(data.client.id);
       }else if(data.type === "READY"){
-        await this.peers.connect(data.client.id);
+        this.peers.connect(data.client.id);
       }else if(data.type === "DATA_REQUEST"){
         this.send(this.client.packet({
           "type": "DATA_RESPONSE",
