@@ -3,6 +3,10 @@ class Client{
     this.id = config.id;
     this.name = config.name;
     this.group = {};
+
+    Object.defineProperty(this,"id",{
+      writable: false
+    });
   }
 
   packet(data){
