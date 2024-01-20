@@ -48,19 +48,14 @@ class WebSocketManager{
           "address": peer.id,
           "data": await peer.createAnswer()
         }));
+
+        this.peers.connect(data.client.id);
       }else if(data.type === "ANSWER_REQUEST"){
         const peer = this.peers.get(data.client.id);
         if(!peer) return;
 
         await peer.setAnswer(data.data);
 
-        this.send(this.client.packet({
-          "type": "READY",
-          "address": peer.id
-        }));
-
-        this.peers.connect(data.client.id);
-      }else if(data.type === "READY"){
         this.peers.connect(data.client.id);
       }else if(data.type === "DATA_REQUEST"){
         this.send(this.client.packet({

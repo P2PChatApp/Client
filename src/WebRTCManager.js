@@ -68,7 +68,5 @@ class WebRTCManager{
   close(){
     this.channel.close();
     this.rtc.close();
-
-    this.reset()
   }
 }
