@@ -1,7 +1,7 @@
 class Client{
-  constructor(id,name){
-    this.id = id;
-    this.name = name;
+  constructor(config){
+    this.id = config.id;
+    this.name = config.name;
     this.group = {};
   }
 

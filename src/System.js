@@ -1,8 +1,11 @@
 class System extends EventTarget{
-  constructor(url){
+  constructor(url,option = {}){
     super();
 
-    this.client = new Client(this.createId(8),this.createId(6));
+    this.client = new Client({
+      name: option.name || this.createId(8),
+      id: option.id || this.createId(6)
+    });
     this.peers = new Peers(this.client);
     this.ws = new WebSocketManager(this.client,this.peers,url);
 
@@ -14,7 +17,7 @@ class System extends EventTarget{
       this.peers.filter();
 
       this.dispatchEvent(new CustomEvent("update"));
-    },3000);
+    },5000);
   }
 
   createId(length){
