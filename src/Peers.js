@@ -96,13 +96,11 @@ class Peers extends EventTarget{
       console.log("WebRTC Open");
 
       peer.isConnected = true;
-      this.dispatchEvent(new CustomEvent("open",{
+      this.dispatchEvent(new CustomEvent("join",{
         "detail": {
           "peer": peer
         }
       }));
-
-      this.send({},"JOIN");
     });
 
     peer.channel.addEventListener("message",(event)=>{
@@ -116,18 +114,6 @@ class Peers extends EventTarget{
           "detail":{
             "peer": peer,
             "data": data.data
-          }
-        }));
-      }else if(data.type === "JOIN"){
-        this.dispatchEvent(new CustomEvent("join",{
-          "detail":{
-            "peer": peer
-          }
-        }));
-      }else if(data.type === "LEAVE"){
-        this.dispatchEvent(new CustomEvent("leave",{
-          "detail":{
-            "peer": peer
           }
         }));
       }
