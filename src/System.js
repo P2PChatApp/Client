@@ -32,8 +32,7 @@ class System extends EventTarget{
   getGroups(){
     return this.peers.all()
       .map(peer=>peer.group)
-      .filter(group=>Object.keys(group).length !== 0)
-      .filter((group,i,array)=>array.findIndex(g=>g.id === group.id) === i);
+      .filter(group=>Object.keys(group).length !== 0);
   }
 
   async createGroup(name,isPublic){
