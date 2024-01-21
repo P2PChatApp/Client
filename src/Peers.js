@@ -84,7 +84,7 @@ class Peers extends EventTarget{
       .forEach(peer=>{
         if(!peer.isConnected) return;
 
-        peer.send(data);
+        peer.send(this.client.rtcPacket(data));
       });
   }
 
