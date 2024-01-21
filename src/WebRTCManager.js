@@ -54,9 +54,7 @@ class WebRTCManager{
   }
 
   createChannel(name){
-    this.channel = this.rtc.createDataChannel(name,{
-      ordered: false
-    });
+    this.channel = this.rtc.createDataChannel(name);
   }
 
   send(data){
