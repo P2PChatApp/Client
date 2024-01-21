@@ -22,4 +22,11 @@ class Client{
       "data": data.data
     };
   }
+
+  rtcPacket(data){
+    return {
+      "content": data.content,
+      "time": new Date()
+    }
+  }
 }
