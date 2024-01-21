@@ -60,7 +60,11 @@ class WebRTCManager{
   send(data){
     if(!this.channel||this.rtc.connectionState !== "connected") return;
 
-    this.channel.send(JSON.stringify(data));
+    data = JSON.stringify(data);
+
+    if(new TextEncoder().encode(data).length >= 64000) throw new Error("送信データ量が多すぎます");
+
+    this.channel.send(data);
   }
 
   close(){
