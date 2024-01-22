@@ -4,7 +4,7 @@ class SendStream extends EventTarget{
 
     this.file = file;
     this.offset = 0;
-    this.chunkSize = 16384
+    this.chunkSize = 16384;
     this.fileReader = new FileReader();
 
     this.fileReader.addEventListener("error",()=>{
@@ -25,8 +25,6 @@ class SendStream extends EventTarget{
 
       if(this.offset < this.file.size){
         this.readData();
-      }else{
-        this.dispatchEvent(new CustomEvent("end"));
       }
     });
 
@@ -40,12 +38,15 @@ class SendStream extends EventTarget{
 }
 
 class ReceiveStream extends EventTarget{
-  constructor(file){
+  constructor(){
     super();
 
-    this.file = file;
     this.buffer = [];
     this.bufferSize = 0;
+  }
+
+  set(file){
+    this.file = file;
   }
 
   receive(chunk){
