@@ -105,7 +105,7 @@ class Peers extends EventTarget{
     Object.values(peer.channels)
       .forEach(channel=>{
         channel.addEventListener("open",()=>{
-          console.log(`${channel.label} DataChannel Open`);
+          console.log(`[${channel.label}] DataChannel Open`);
 
           peer.isConnected = true;
           this.dispatchEvent(new CustomEvent("join",{
@@ -119,22 +119,24 @@ class Peers extends EventTarget{
           const data = parse(event.data.toString());
           if(!data) return;
 
-          console.log(`${channel.label} DataChannel Data: ${JSON.stringify(data)}`);
+          console.log(`[${channel.label}] DataChannel Data: ${JSON.stringify(data)}`);
 
-          this.dispatchEvent(new CustomEvent("message",{
-            "detail":{
-              "peer": peer,
-              "data": data
-            }
-          }));
+          if(channel.label === "chat"){
+            this.dispatchEvent(new CustomEvent("message",{
+              "detail":{
+                "peer": peer,
+                "data": data
+              }
+            }));
+          }
         });
 
         channel.addEventListener("error",(event)=>{
-          console.log(`${channel.label} DataChannel Error: ${event.error}`);
+          console.log(`[${channel.label}] DataChannel Error: ${event.error}`);
         });
 
         channel.addEventListener("close",()=>{
-          console.log(`${channel.label} DataChannel Close`);
+          console.log(`[${channel.label}] DataChannel Close`);
 
           peer.close();
 
