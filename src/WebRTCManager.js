@@ -61,11 +61,13 @@ class WebRTCManager{
     const channel = this.channels[name];
 
     if(!channel||this.rtc.connectionState !== "connected") return;
-    console.log(channel.label)
+    console.log(data)
     channel.send(JSON.stringify(data));
   }
 
   close(){
+    if(this.rtc.connectionState === "closed") return;
+
     if(this.isChannels()){
       Object.values(this.channels)
         .forEach(ch=>ch.close());

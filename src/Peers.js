@@ -74,31 +74,46 @@ class Peers extends EventTarget{
   disconnect(){
     this.all()
       .forEach(peer=>{
-        if(!peer.isConnected) return;
-        peer.isConnected = false;
-
         peer.close();
       });
   }
 
-  send(data){
+  #sendData(type,data){
     this.all()
       .forEach(peer=>{
-        if(!peer.isConnected) return;
+        peer.send(type,data);
+    });
+  }
 
-        peer.send("chat",this.client.rtcPacket(data));
-      });
+  send(data){
+    this.#sendData("chat",this.client.rtcPacket(data));
   }
 
   sendFile(file){
     if(file.size === 0) throw new Error("空のファイルは送信できません");
 
-    this.all()
-      .forEach(peer=>{
-        if(!peer.isConnected) return;
+    if(file.size > 104857600) throw new Error("100MB以上のファイルは送信できません");
 
-        peer.send("file",file);
+    const stream = new SendStream(file);
+
+    this.#sendData("file",{
+      "type": "STREAM_START",
+      "file":{
+        "name": file.name,
+        "size": file.size,
+        "type": file.type
+      },
+      "time": new Date()
+    });
+
+    stream.addEventListener("data",(event)=>{
+      this.#sendData("file",{
+        "type": "STREAM_DATA",
+        "data": event.detail.data,
+        "offset": event.detail.offset,
+        "time": new Date()
       });
+    });
   }
 
   event(peer){
@@ -107,9 +122,9 @@ class Peers extends EventTarget{
         channel.addEventListener("open",()=>{
           console.log(`[${channel.label}] DataChannel Open`);
 
-          peer.isConnected = true;
           this.dispatchEvent(new CustomEvent("join",{
             "detail": {
+              "type": channel.label,
               "peer": peer
             }
           }));
@@ -124,10 +139,13 @@ class Peers extends EventTarget{
           if(channel.label === "chat"){
             this.dispatchEvent(new CustomEvent("message",{
               "detail":{
+                "type": channel.label,
                 "peer": peer,
                 "data": data
               }
             }));
+          }else if(channel.label === "file"){
+            this.stream(data);
           }
         });
 
@@ -142,10 +160,28 @@ class Peers extends EventTarget{
 
           this.dispatchEvent(new CustomEvent("leave",{
             "detail": {
+              "type": channel.label,
               "peer": peer
             }
           }));
         });
       });
+  }
+
+  stream(data){
+    const stream = new ReceiveStream();
+    if(data.type === "STREAM_START"){
+      stream.set(data.file);
+    }else if(data.type === "STREAM_DATA"){
+      stream.receive(data.data);
+    }
+
+    stream.addEventListener("data",(event)=>{
+      this.dispatchEvent(new CustomEvent("file",{
+        "detail":{
+          "data": event.detail.data
+        }
+      }));
+    });
   }
 }

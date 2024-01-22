@@ -6,8 +6,6 @@ class Peer extends WebRTCManager{
     this.id = data.client.id;
     this.time = data.client.time;
     this.group = data.group;
-
-    this.isConnected = false;
   }
 
   update(data){
