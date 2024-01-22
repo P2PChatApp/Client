@@ -92,7 +92,7 @@ class Peers extends EventTarget{
 
   sendFile(file){
     if(file.size === 0) throw new Error("空のファイルは送信できません");
-    return
+
     this.all()
       .forEach(peer=>{
         if(!peer.isConnected) return;
