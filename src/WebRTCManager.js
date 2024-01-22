@@ -14,7 +14,7 @@ class WebRTCManager{
       ]
     });
 
-    this.channel = null;
+    this.channels = {};
   }
 
   async createOffer(){
@@ -54,22 +54,35 @@ class WebRTCManager{
   }
 
   createChannel(name){
-    this.channel = this.rtc.createDataChannel(name);
+    this.channels[name] = this.rtc.createDataChannel(name);
   }
 
-  send(data){
-    if(!this.channel||this.rtc.connectionState !== "connected") return;
+  send(name,data){
+    const channel = this.channels[name];
 
-    this.channel.send(JSON.stringify(data));
+    if(!channel||this.rtc.connectionState !== "connected") return;
+
+    channel.send(JSON.stringify(data));
   }
 
   close(){
-    if(this.channel){
-      this.channel.close();
+    if(this.isChannels()){
+      Object.values(this.channels)
+        .forEach(ch=>ch.close());
     }
 
     this.rtc.close();
 
     this.reset();
+
+    console.log("WebRTC Close");
+  }
+
+  addChannel(channel){
+    this.channels[channel.label] = channel;
+  }
+
+  isChannels(){
+    return Object.keys(this.channels).length !== 0;
   }
 }

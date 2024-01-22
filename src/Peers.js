@@ -58,11 +58,13 @@ class Peers extends EventTarget{
     const peer = this.get(id);
     if(!peer) return;
 
-    if(peer.channel){
+    console.log("WebRTC Open");
+
+    if(peer.isChannels()){
       this.event(peer);
     }else{
       peer.rtc.addEventListener("datachannel",(event)=>{
-        peer.channel = event.channel;
+        peer.addChannel(event.channel);
 
         this.event(peer);
       });
@@ -84,50 +86,64 @@ class Peers extends EventTarget{
       .forEach(peer=>{
         if(!peer.isConnected) return;
 
-        peer.send(this.client.rtcPacket(data));
+        peer.send("chat",this.client.rtcPacket(data));
+      });
+  }
+
+  sendFile(file){
+    if(file.size === 0) throw new Error("空のファイルは送信できません");
+
+    this.all()
+      .forEach(peer=>{
+        if(!peer.isConnected) return;
+
+        peer.send("file",data);
       });
   }
 
   event(peer){
-    peer.channel.addEventListener("open",()=>{
-      console.log("WebRTC Open");
+    Object.values(peer.channels)
+      .forEach(channel=>{
+        channel.addEventListener("open",()=>{
+          console.log(`${channel.label} DataChannel Open`);
 
-      peer.isConnected = true;
-      this.dispatchEvent(new CustomEvent("join",{
-        "detail": {
-          "peer": peer
-        }
-      }));
-    });
+          peer.isConnected = true;
+          this.dispatchEvent(new CustomEvent("join",{
+            "detail": {
+              "peer": peer
+            }
+          }));
+        });
 
-    peer.channel.addEventListener("message",(event)=>{
-      const data = parse(event.data.toString());
-      if(!data) return;
+        channel.addEventListener("message",(event)=>{
+          const data = parse(event.data.toString());
+          if(!data) return;
 
-      console.log(`WebRTC Data: ${JSON.stringify(data)}`);
+          console.log(`${channel.label} DataChannel Data: ${JSON.stringify(data)}`);
 
-      this.dispatchEvent(new CustomEvent("message",{
-        "detail":{
-          "peer": peer,
-          "data": data
-        }
-      }));
-    });
+          this.dispatchEvent(new CustomEvent("message",{
+            "detail":{
+              "peer": peer,
+              "data": data
+            }
+          }));
+        });
 
-    peer.channel.addEventListener("error",(event)=>{
-      console.log(`WebRTC Error: ${event.error}`);
-    });
+        channel.addEventListener("error",(event)=>{
+          console.log(`${channel.label} DataChannel Error: ${event.error}`);
+        });
 
-    peer.channel.addEventListener("close",()=>{
-      console.log("WebRTC Close");
+        channel.addEventListener("close",()=>{
+          console.log(`${channel.label} DataChannel Close`);
 
-      peer.close();
+          peer.close();
 
-      this.dispatchEvent(new CustomEvent("leave",{
-        "detail": {
-          "peer": peer
-        }
-      }));
-    });
+          this.dispatchEvent(new CustomEvent("leave",{
+            "detail": {
+              "peer": peer
+            }
+          }));
+        });
+      });
   }
 }
