@@ -27,7 +27,7 @@ class WebSocketManager{
       },5000);
     });
 
-    this.ws.addEventListener("error",(error)=>{
+    this.ws.addEventListener("error",()=>{
       console.log("WebSocket Error");
     });
 
