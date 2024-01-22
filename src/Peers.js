@@ -82,7 +82,7 @@ class Peers extends EventTarget{
     this.all()
       .forEach(peer=>{
         peer.send(type,data);
-    });
+      });
   }
 
   send(data){
