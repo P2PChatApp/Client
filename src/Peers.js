@@ -139,9 +139,9 @@ class Peers extends EventTarget{
           console.log(`[${channel.label}] DataChannel Data: ${JSON.stringify(data)}`);
 
           if(channel.label === "chat"){
-            this.chat(peer,data);
+            this.chatEvent(peer,data);
           }else if(channel.label === "file"){
-            this.stream(peer,data);
+            this.streamEvent(peer,data);
           }
         });
 
@@ -164,7 +164,7 @@ class Peers extends EventTarget{
       });
   }
 
-  chat(peer,data){
+  chatEvent(peer,data){
     this.dispatchEvent(new CustomEvent("message",{
       "detail":{
         "peer": peer,
@@ -173,7 +173,7 @@ class Peers extends EventTarget{
     }));
   }
 
-  stream(peer,data){
+  streamEvent(peer,data){
     if(data.type === "STREAM_START"){
       this.stream.set(data.file);
     }else if(data.type === "STREAM_DATA"){
