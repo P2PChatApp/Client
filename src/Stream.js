@@ -43,10 +43,18 @@ class ReceiveStream extends EventTarget{
 
     this.buffer = [];
     this.bufferSize = 0;
+    this.timeout = null;
   }
 
   set(file){
     this.file = file;
+  }
+
+  reset(){
+    this.file = null;
+    this.buffer = [];
+    this.bufferSize = 0;
+    clearTimeout(this.timeout);
   }
 
   receive(chunk){
@@ -55,12 +63,20 @@ class ReceiveStream extends EventTarget{
     this.buffer.push(data);
     this.bufferSize += data.byteLength;
 
+    clearTimeout(this.timeout);
+
+    this.timeout = setTimeout(()=>{
+      this.reset();
+    },1000);
+
     if(this.bufferSize === this.file.size){
       this.dispatchEvent(new CustomEvent("data",{
         "detail": {
           "data": new Blob(this.buffer)
         }
       }));
+
+      this.reset();
     }
   }
 

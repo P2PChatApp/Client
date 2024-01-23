@@ -4,6 +4,8 @@ class Peers extends EventTarget{
 
     this.client = client;
     this.list = {};
+
+    this.stream = new ReceiveStream();
   }
 
   all(){
@@ -137,15 +139,9 @@ class Peers extends EventTarget{
           console.log(`[${channel.label}] DataChannel Data: ${JSON.stringify(data)}`);
 
           if(channel.label === "chat"){
-            this.dispatchEvent(new CustomEvent("message",{
-              "detail":{
-                "type": channel.label,
-                "peer": peer,
-                "data": data
-              }
-            }));
+            this.chat(peer,data);
           }else if(channel.label === "file"){
-            this.stream(data);
+            this.stream(peer,data);
           }
         });
 
@@ -168,18 +164,28 @@ class Peers extends EventTarget{
       });
   }
 
-  stream(data){
-    const stream = new ReceiveStream();
+  chat(peer,data){
+    this.dispatchEvent(new CustomEvent("message",{
+      "detail":{
+        "peer": peer,
+        "data": data
+      }
+    }));
+  }
+
+  stream(peer,data){
     if(data.type === "STREAM_START"){
-      stream.set(data.file);
+      this.stream.set(data.file);
     }else if(data.type === "STREAM_DATA"){
-      stream.receive(data.data);
+      this.stream.receive(data.data);
     }
 
-    stream.addEventListener("data",(event)=>{
+    this.stream.addEventListener("data",(event)=>{
       this.dispatchEvent(new CustomEvent("file",{
         "detail":{
-          "data": event.detail.data
+          "peer": peer,
+          "data": event.detail.data,
+          "file": this.stream.file
         }
       }));
     });
