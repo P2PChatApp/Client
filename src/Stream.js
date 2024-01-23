@@ -46,8 +46,9 @@ class ReceiveStream extends EventTarget{
     this.timeout = null;
   }
 
-  set(file){
+  set(file,peer){
     this.file = file;
+    this.peer = peer;
   }
 
   reset(){

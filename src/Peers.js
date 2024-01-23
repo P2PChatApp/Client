@@ -6,6 +6,16 @@ class Peers extends EventTarget{
     this.list = {};
 
     this.stream = new ReceiveStream();
+
+    this.stream.addEventListener("data",(event)=>{
+      this.dispatchEvent(new CustomEvent("file",{
+        "detail":{
+          "peer": this.stream.peer,
+          "data": event.detail.data,
+          "file": this.stream.file
+        }
+      }));
+    });
   }
 
   all(){
@@ -175,19 +185,9 @@ class Peers extends EventTarget{
 
   streamEvent(peer,data){
     if(data.type === "STREAM_START"){
-      this.stream.set(data.file);
+      this.stream.set(data.file,peer);
     }else if(data.type === "STREAM_DATA"){
       this.stream.receive(data.data);
     }
-
-    this.stream.addEventListener("data",(event)=>{
-      this.dispatchEvent(new CustomEvent("file",{
-        "detail":{
-          "peer": peer,
-          "data": event.detail.data,
-          "file": this.stream.file
-        }
-      }));
-    });
   }
 }
