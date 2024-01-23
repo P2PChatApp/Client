@@ -184,7 +184,8 @@ class Peers extends EventTarget{
       this.dispatchEvent(new CustomEvent("file",{
         "detail":{
           "peer": peer,
-          "data": event.detail.data
+          "data": event.detail.data,
+          "file": this.stream.file
         }
       }));
     });
