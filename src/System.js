@@ -74,6 +74,7 @@ class System extends EventTarget{
       .filter(peer=>peer.group.id === this.client.group.id)
       .forEach(async(peer)=>{
         peer.createChannel("chat");
+        peer.createChannel("file");
 
         this.ws.send(this.client.packet({
           "type": "OFFER_REQUEST",
