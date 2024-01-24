@@ -98,7 +98,6 @@ class Peers extends EventTarget{
   }
 
   send(data){
-    console.log(data)
     this.#sendData("chat",this.client.rtcPacket(data));
   }
 
