@@ -73,8 +73,6 @@ class System extends EventTarget{
     this.peers.all()
       .filter(peer=>peer.group.id === this.client.group.id)
       .forEach(async(peer)=>{
-        this.peers.connect(peer.id);
-
         peer.createChannel("chat");
         peer.createChannel("file");
 
