@@ -57,6 +57,14 @@ class WebRTCManager{
     this.channels[name] = this.rtc.createDataChannel(name);
   }
 
+  addChannel(channel){
+    this.channels[channel.label] = channel;
+  }
+
+  get isChannels(){
+    return Object.keys(this.channels).length !== 0;
+  }
+
   send(name,data){
     const channel = this.channels[name];
 
@@ -68,7 +76,7 @@ class WebRTCManager{
   close(){
     if(this.rtc.connectionState === "closed") return;
 
-    if(this.isChannels()){
+    if(this.isChannels){
       Object.values(this.channels)
         .forEach(ch=>ch.close());
     }
@@ -78,13 +86,5 @@ class WebRTCManager{
     this.reset();
 
     console.log("WebRTC Close");
-  }
-
-  addChannel(channel){
-    this.channels[channel.label] = channel;
-  }
-
-  isChannels(){
-    return Object.keys(this.channels).length !== 0;
   }
 }
