@@ -18,7 +18,7 @@ class SendStream extends EventTarget{
 
       this.dispatchEvent(new CustomEvent("data",{
         "detail": {
-          "data": parseArray(data),
+          "data": this.parseArray(data),
           "offset": this.offset
         }
       }));
