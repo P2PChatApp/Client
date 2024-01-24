@@ -73,6 +73,7 @@ class Peers extends EventTarget{
     console.log("WebRTC Open");
 
     if(peer.isChannels){
+      console.log(peer)
       this.event(peer);
     }else{
       peer.rtc.addEventListener("datachannel",(event)=>{
@@ -149,7 +150,6 @@ class Peers extends EventTarget{
           console.log(`[${channel.label}] DataChannel Data: ${JSON.stringify(data)}`);
 
           if(channel.label === "chat"){
-            console.log(data)
             this.dispatchEvent(new CustomEvent("message",{
               "detail":{
                 "peer": peer,
