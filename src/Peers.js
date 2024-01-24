@@ -149,6 +149,7 @@ class Peers extends EventTarget{
           console.log(`[${channel.label}] DataChannel Data: ${JSON.stringify(data)}`);
 
           if(channel.label === "chat"){
+            console.log(data)
             this.dispatchEvent(new CustomEvent("message",{
               "detail":{
                 "peer": peer,
