@@ -18,7 +18,7 @@ class SendStream extends EventTarget{
 
       this.dispatchEvent(new CustomEvent("data",{
         "detail": {
-          "data": Array.from(new Uint8Array(data)),
+          "data": parseArray(data),
           "offset": this.offset
         }
       }));
@@ -34,6 +34,10 @@ class SendStream extends EventTarget{
   readData(){
     const data = this.file.slice(this.offset,this.offset+this.chunkSize);
     this.fileReader.readAsArrayBuffer(data);
+  }
+
+  parseArray(buffer){
+    return Array.from(new Uint8Array(buffer));
   }
 }
 

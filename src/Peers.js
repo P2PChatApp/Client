@@ -149,9 +149,18 @@ class Peers extends EventTarget{
           console.log(`[${channel.label}] DataChannel Data: ${JSON.stringify(data)}`);
 
           if(channel.label === "chat"){
-            this.chatEvent(peer,data);
+            this.dispatchEvent(new CustomEvent("message",{
+              "detail":{
+                "peer": peer,
+                "data": data
+              }
+            }));
           }else if(channel.label === "file"){
-            this.streamEvent(peer,data);
+            if(data.type === "STREAM_START"){
+              this.stream.set(data.file,peer);
+            }else if(data.type === "STREAM_DATA"){
+              this.stream.receive(data.data);
+            }
           }
         });
 
@@ -172,22 +181,5 @@ class Peers extends EventTarget{
           }));
         });
       });
-  }
-
-  chatEvent(peer,data){
-    this.dispatchEvent(new CustomEvent("message",{
-      "detail":{
-        "peer": peer,
-        "data": data
-      }
-    }));
-  }
-
-  streamEvent(peer,data){
-    if(data.type === "STREAM_START"){
-      this.stream.set(data.file,peer);
-    }else if(data.type === "STREAM_DATA"){
-      this.stream.receive(data.data);
-    }
   }
 }
