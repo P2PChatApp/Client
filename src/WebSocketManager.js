@@ -55,8 +55,6 @@ class WebSocketManager{
         if(!peer) return;
 
         await peer.setAnswer(data.data);
-
-        this.peers.connect(data.client.id);
       }else if(data.type === "DATA_REQUEST"){
         this.send(this.client.packet({
           "type": "DATA_RESPONSE",
