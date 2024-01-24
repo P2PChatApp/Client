@@ -73,12 +73,11 @@ class Peers extends EventTarget{
     console.log("WebRTC Open");
 
     if(peer.isChannels){
-      console.log(peer)
       this.event(peer);
     }else{
       peer.rtc.addEventListener("datachannel",(event)=>{
         peer.addChannel(event.channel);
-
+        console.log(event.channel)
         this.event(peer);
       });
     }
