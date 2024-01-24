@@ -73,12 +73,17 @@ class Peers extends EventTarget{
     console.log("WebRTC Open");
 
     if(peer.isChannels){
-      this.event(peer);
+      this.chatEvent(peer);
+      this.fileEvent(peer);
     }else{
       peer.rtc.addEventListener("datachannel",(event)=>{
         peer.addChannel(event.channel);
-        console.log(event.channel)
-        this.event(peer);
+
+        if(event.channel.label === "chat"){
+          this.chatEvent(peer);
+        }else if(event.channel.label === "file"){
+          this.fileEvent(peer);
+        }
       });
     }
   }
@@ -128,58 +133,94 @@ class Peers extends EventTarget{
     });
   }
 
-  event(peer){
-    Object.values(peer.channels)
-      .forEach(channel=>{
-        channel.addEventListener("open",()=>{
-          console.log(`[${channel.label}] DataChannel Open`);
+  chatEvent(peer){
+    const channel = peer.channels["chat"];
 
-          this.dispatchEvent(new CustomEvent("join",{
-            "detail": {
-              "type": channel.label,
-              "peer": peer
-            }
-          }));
-        });
+    channel.addEventListener("open",()=>{
+      console.log(`[${channel.label}] DataChannel Open`);
 
-        channel.addEventListener("message",(event)=>{
-          const data = parse(event.data.toString());
-          if(!data) return;
+      this.dispatchEvent(new CustomEvent("join",{
+        "detail": {
+          "type": channel.label,
+          "peer": peer
+        }
+      }));
+    });
 
-          console.log(`[${channel.label}] DataChannel Data: ${JSON.stringify(data)}`);
+    channel.addEventListener("message",(event)=>{
+      const data = parse(event.data.toString());
+      if(!data) return;
 
-          if(channel.label === "chat"){
-            this.dispatchEvent(new CustomEvent("message",{
-              "detail":{
-                "peer": peer,
-                "data": data
-              }
-            }));
-          }else if(channel.label === "file"){
-            if(data.type === "STREAM_START"){
-              this.stream.set(data.file,peer);
-            }else if(data.type === "STREAM_DATA"){
-              this.stream.receive(data.data);
-            }
-          }
-        });
+      console.log(`[${channel.label}] DataChannel Data: ${JSON.stringify(data)}`);
 
-        channel.addEventListener("error",(event)=>{
-          console.log(`[${channel.label}] DataChannel Error: ${event.error}`);
-        });
+      this.dispatchEvent(new CustomEvent("message",{
+        "detail":{
+          "peer": peer,
+          "data": data
+        }
+      }));
+    });
 
-        channel.addEventListener("close",()=>{
-          console.log(`[${channel.label}] DataChannel Close`);
+    channel.addEventListener("error",(event)=>{
+      console.log(`[${channel.label}] DataChannel Error: ${event.error}`);
+    });
 
-          peer.close();
+    channel.addEventListener("close",()=>{
+      console.log(`[${channel.label}] DataChannel Close`);
 
-          this.dispatchEvent(new CustomEvent("leave",{
-            "detail": {
-              "type": channel.label,
-              "peer": peer
-            }
-          }));
-        });
-      });
+      peer.close();
+
+      this.dispatchEvent(new CustomEvent("leave",{
+        "detail": {
+          "type": channel.label,
+          "peer": peer
+        }
+      }));
+    });
+  }
+
+  fileEvent(peer){
+    const channel = peer.channels["file"];
+
+    channel.addEventListener("open",()=>{
+      console.log(`[${channel.label}] DataChannel Open`);
+
+      this.dispatchEvent(new CustomEvent("join",{
+        "detail": {
+          "type": channel.label,
+          "peer": peer
+        }
+      }));
+    });
+
+    channel.addEventListener("message",(event)=>{
+      const data = parse(event.data.toString());
+      if(!data) return;
+
+      console.log(`[${channel.label}] DataChannel Data: ${JSON.stringify(data)}`);
+
+      if(data.type === "STREAM_START"){
+        this.stream.set(data.file,peer);
+      }else if(data.type === "STREAM_DATA"){
+        this.stream.receive(data.data);
+      }
+    });
+
+    channel.addEventListener("error",(event)=>{
+      console.log(`[${channel.label}] DataChannel Error: ${event.error}`);
+    });
+
+    channel.addEventListener("close",()=>{
+      console.log(`[${channel.label}] DataChannel Close`);
+
+      peer.close();
+
+      this.dispatchEvent(new CustomEvent("leave",{
+        "detail": {
+          "type": channel.label,
+          "peer": peer
+        }
+      }));
+    });
   }
 }
