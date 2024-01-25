@@ -109,7 +109,7 @@ class Peers extends EventTarget{
   sendFile(file){
     if(file.size === 0) throw new Error("空のファイルは送信できません");
 
-    if(file.size > 31457280) throw new Error("30MB以上のファイルは送信できません");
+    if(file.size > 1048576) throw new Error("1MB以上のファイルは送信できません");
 
     const stream = new SendStream(file);
 
