@@ -84,3 +84,5 @@ class System extends EventTarget{
       });
   }
 }
+
+globalThis.p2p = System;
