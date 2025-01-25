@@ -85,4 +85,4 @@ class System extends EventTarget{
   }
 }
 
-globalThis.p2p = System;
+global.p2p = System;
